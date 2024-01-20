@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import Content from './Content';
-import Header from './Header'
+import Header from './Header';
 import Footer from './Footer';
 
 const MainComponent = () => {

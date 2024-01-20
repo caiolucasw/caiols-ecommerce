@@ -1,7 +1,5 @@
 import { Box } from '@mui/material';
-import React from 'react';
-import ProductFilters from './ProductFilters';
-import ListProductsContainer from './ListProductsContainer';
+import { Outlet } from 'react-router-dom';
 
 const Content = () => {
   return (
@@ -18,13 +16,12 @@ const Content = () => {
           gap: 3,
           py: 3,
           px: 1,
-          maxWidth: '1400px',
+          maxWidth: 'var(--max-screen-width)',
           backgroundColor: 'rgba(177, 179, 181, 0.05)',
           mx: 'auto',
         }}
       >
-        <ProductFilters />
-        <ListProductsContainer />
+        <Outlet />
 
       </Box>
     </Box>

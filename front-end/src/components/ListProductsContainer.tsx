@@ -1,6 +1,5 @@
-import { Box, Typography, FormControlLabel, Checkbox, Grid } from '@mui/material';
-import React from 'react'
-import ProductFilters from './ProductFilters';
+import { Box, Grid } from '@mui/material';
+
 import ProductItem from './ProductItem';
 
 const ListProductsContainer = () => {
@@ -21,7 +20,8 @@ const ListProductsContainer = () => {
                 spacing={2}
             >
                 {[1,2,3,4,5,6,7].map(item => (
-                    <Grid 
+                    <Grid
+                        key={item}
                         item
                         xs={12}
                         sm={6}

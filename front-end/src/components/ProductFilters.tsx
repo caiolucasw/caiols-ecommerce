@@ -7,12 +7,12 @@ const ProductFilters = () => {
         sx={{
             borderRadius: 2,
             pt: 1,
-
+            minWidth: 200
         }}
     >
         <CardContent>
             <Typography 
-                variant="h6"
+                variant="subtitle1"
                 fontWeight={700}
                 p={1}
             >
@@ -55,7 +55,7 @@ const ProductFilters = () => {
             </Box>
             <Divider />
             <Typography 
-                variant="h6"
+                variant="subtitle1"
                 fontWeight={700}
                 p={1}
             >
