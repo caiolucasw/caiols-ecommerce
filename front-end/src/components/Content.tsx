@@ -17,7 +17,6 @@ const Content = () => {
           py: 3,
           px: 1,
           maxWidth: 'var(--max-screen-width)',
-          backgroundColor: 'rgba(177, 179, 181, 0.05)',
           mx: 'auto',
         }}
       >
