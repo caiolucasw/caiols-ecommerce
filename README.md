@@ -1,7 +1,7 @@
 ## ﻿Caio.ls Ecommerce
 
 ## Descrição:
- Caio.ls é um e-commerce para vender produtos de tecnologia
+ Caio.ls é um e-commerce que vende produtos de tecnologia.
 
 
 ## Modelo de Domínio 
