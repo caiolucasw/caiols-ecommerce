@@ -14,7 +14,7 @@ class ProductController extends Controller
     //
 
     public function get(Request $request) {
-        $qb = DB::table('products');
+        $qb = Product::query();
         $categories = $request->query('category');
         $name = $request->query('name');
         if ($name) {
@@ -36,7 +36,7 @@ class ProductController extends Controller
     public function findById($id) {
 
         try {
-            $product = Product::where('id', $id)->firstOrFail();
+            $product = Product::where('id', $id)->with('category')->with('brand')->firstOrFail();
         } catch (ModelNotFoundException $e) {
             return response()->json([ 'data' => 'resource not found'], 404);
 
