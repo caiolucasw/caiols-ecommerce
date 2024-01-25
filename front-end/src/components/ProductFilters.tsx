@@ -1,6 +1,9 @@
 import { Box, FormControlLabel, Typography, Checkbox, Card, CardContent, Divider } from '@mui/material'
 import {useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios';
+import { fetchProducts } from '../app/searchProductsSlice';
+import { RootState } from '../app/store';
 
 
 interface CategoryInterface {
@@ -9,6 +12,7 @@ interface CategoryInterface {
 
 const ProductFilters = () => {
     const dispatch = useDispatch();
+    const productName = useSelector((state: RootState) => state.searchProducts.name);
     const categories = [{ id: 1, label: "Computadores" }, { id: 2, label: "Tablets" }];
     const [selectedCategories, setSelectedCategories] = useState<CategoryInterface>({});
 
@@ -16,6 +20,7 @@ const ProductFilters = () => {
         if (!selectedCategories[categoryId]) {
 
             const categoriesAux = [...Object.keys(selectedCategories), categoryId];
+            // dispatch(fetchProducts({ name: productName, categories: categoriesAux }));
             // make request with thunk
             setSelectedCategories((current) => ({...current, [categoryId]: categoryId }));
         }

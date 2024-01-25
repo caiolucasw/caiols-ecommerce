@@ -1,5 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { formatQueryParams } from "../utils/queryParams";
 
 export interface SearchProductsState {
     name: string;
@@ -11,6 +13,21 @@ const initialState: SearchProductsState = {
     // categories: [],
 }
 
+interface FetchProductsInterface {
+    name: string;
+    categories: string[] | number[];
+}
+
+export const fetchProducts = createAsyncThunk<any, any, any>(
+    'products',
+    async (filters : FetchProductsInterface) => {
+      const qs = formatQueryParams(filters);
+      const response = await axios.get(`${import.meta.env.BASE_URL}/products${qs}`);
+      return response.data
+    }
+  )
+  
+
 export const searchProductsSlice = createSlice({
     name: 'searchProducts',
     initialState,
@@ -18,13 +35,20 @@ export const searchProductsSlice = createSlice({
         setInputNameValue: (state, action: PayloadAction<string>) => {
             state.name = action.payload;
         },
+
         // addCategory: (state, action: PayloadAction<string>) => {
         //     state.categories.push(action.payload);
         // },
         // removeCategory: (state, action: PayloadAction<string>) => {
         //     state.categories = state.categories.filter((category) => category !== action.payload);
         // }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchProducts.fulfilled, (state, action) => {
+            console.log(action.payload);
+        })
     }
+    
 });
 
 export const { setInputNameValue } = searchProductsSlice.actions;
