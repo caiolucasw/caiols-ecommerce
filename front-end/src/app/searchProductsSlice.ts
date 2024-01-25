@@ -15,14 +15,16 @@ const initialState: SearchProductsState = {
 
 interface FetchProductsInterface {
     name: string;
-    categories: string[] | number[];
+    category: string[] | number[];
 }
 
-export const fetchProducts = createAsyncThunk<any, any, any>(
+type Product = any;
+
+export const fetchProducts = createAsyncThunk<FetchProductsInterface, Product>(
     'products',
-    async (filters : FetchProductsInterface) => {
+    async (filters) => {
       const qs = formatQueryParams(filters);
-      const response = await axios.get(`${import.meta.env.BASE_URL}/products${qs}`);
+      const response = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/products${qs}`);
       return response.data
     }
   )
