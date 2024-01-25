@@ -10,6 +10,8 @@ import {
 } from 'react-router-dom';
 import HomeContent from './components/HomeContent.tsx'
 import { createTheme, ThemeProvider } from '@mui/material'
+import { Provider } from 'react-redux'
+import { store } from './app/store.ts'
 
 
 const theme = createTheme({
@@ -49,8 +51,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
 )

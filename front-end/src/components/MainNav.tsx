@@ -1,6 +1,5 @@
-import { Box, Drawer, IconButton, InputAdornment, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Box, Drawer, IconButton, Typography, useMediaQuery } from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon  from "@mui/icons-material/Person";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
@@ -8,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DepartmentList from "./DepartmentList";
 import CloseIcon from "@mui/icons-material/Close";
+import SearchInput from "./SearchInput";
 
 const MainNav = () => {
   const theme = useTheme();
@@ -153,27 +153,7 @@ const MainNav = () => {
             alignItems="center"
             py={1}
           >
-            <TextField 
-              variant="outlined"
-              size="small"
-              placeholder="Procure produtos"             
-              sx={{ 
-                backgroundColor: 'white', 
-                borderRadius: 4,
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#70e000',
-                  borderRadius: 4,
-                }
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <SearchIcon />
-                  </InputAdornment>
-                )
-              }}
-              fullWidth
-            />
+            <SearchInput />
           </Box>
         )}
         <Box
