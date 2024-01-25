@@ -1,33 +1,30 @@
-import { Box } from '@mui/material';
-import Content from './Content';
-import Header from './Header';
-import Footer from './Footer';
+import { Box } from "@mui/material";
+import Content from "./Content";
+import Header from "./Header";
+import Footer from "./Footer";
 
 const MainComponent = () => {
   return (
     <Box
-        sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-        }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
     >
-        <Header />
-        <Box 
-            sx={{
-                px: 4,
-                flex: 1,
-            }}
-        >
-            <Content />
-        </Box>
-      
+      <Header />
+      <Box
+        sx={{
+          px: 4,
+          flex: 1,
+        }}
+      >
+        <Content />
+      </Box>
 
-        <Footer />
-       
+      <Footer />
     </Box>
-
-  )
-}
+  );
+};
 
 export default MainComponent;

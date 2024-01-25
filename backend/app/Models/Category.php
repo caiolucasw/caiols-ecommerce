@@ -17,6 +17,6 @@ class Category extends Model
                 ->selectRaw('categories.id, categories.label, COUNT(products.id) as products_count')
                 ->get();
 
-        return response()->json(['data' => $categoriesCount], 200);
+            return response()->json(['data' => $categoriesCount], 200);
     }
 }

@@ -1,7 +1,5 @@
 const CamerasPage = () => {
-  return (
-    <div>CamerasPage</div>
-  )
-}
+  return <div>CamerasPage</div>;
+};
 
-export default CamerasPage
+export default CamerasPage;

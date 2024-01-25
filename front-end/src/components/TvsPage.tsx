@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const TvsPage = () => {
-  return (
-    <div>TvsPage</div>
-  )
-}
+  return <div>TvsPage</div>;
+};
 
-export default TvsPage
+export default TvsPage;

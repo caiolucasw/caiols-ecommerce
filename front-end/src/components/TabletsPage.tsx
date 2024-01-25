@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const TabletsPage = () => {
-  return (
-    <div>TabletsPage</div>
-  )
-}
+  return <div>TabletsPage</div>;
+};
 
-export default TabletsPage
+export default TabletsPage;
