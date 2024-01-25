@@ -12,6 +12,11 @@ import HomeContent from './components/HomeContent.tsx'
 import { createTheme, ThemeProvider } from '@mui/material'
 import { Provider } from 'react-redux'
 import { store } from './app/store.ts'
+import NotebooksPage from './components/NotebooksPage.tsx'
+import TabletsPage from './components/TabletsPage.tsx'
+import PhonesPage from './components/PhonesPage.tsx'
+import TvsPage from './components/TvsPage.tsx'
+import CamerasPage from './components/CamerasPage.tsx'
 
 
 const theme = createTheme({
@@ -40,6 +45,26 @@ const router = createBrowserRouter([
       {
         path: '/product/:id',
         element: <ProductDetails />
+      },
+      {
+        path: '/notebooks',
+        element: <NotebooksPage />
+      },
+      {
+        path: '/tablets',
+        element: <TabletsPage />
+      },
+      {
+        path: '/celulares',
+        element: <PhonesPage />
+      },
+      {
+        path: '/tvs',
+        element: <TvsPage />
+      },
+      {
+        path: '/cameras',
+        element: <CamerasPage />
       },
       {
         path: '',
