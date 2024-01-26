@@ -6,7 +6,7 @@
 
 ## Modelo de Domínio 
 
-![Modelo de Domínio](ecommerce-diagram.png)
+![Modelo de Domínio](ecommerce-diagram-model.png)
 
 ## Tecnologias
   - Front-end:
