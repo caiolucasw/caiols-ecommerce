@@ -15,17 +15,22 @@ class ProductController extends Controller
 
     public function get(Request $request) {
         $qb = Product::query();
-        $categories = $request->query('category');
         $name = $request->query('name');
+        $categories = $request->query('category');
+        $categoryName = $request->query('category_name');
+
         if ($name) {
             $qb = $qb->where('name', 'like', '%'.$name.'%');
         }
 
-        if ($categories) {
+        if ($categories && count(explode(',', $categories)) > 0) {
             $categoriesArray = explode(',', $categories);
-            if (count($categoriesArray)) {
-                $qb = $qb->whereIn('category', $categoriesArray);
-            }
+            $qb = $qb->whereIn('category_id', $categoriesArray);
+            
+        } else if ($categoryName) {
+            $qb = $qb->join('categories', 'products.category_id', '=', 'categories.id');
+            $qb = $qb->where('categories.value', '=', $categoryName);
+            
         }
 
         $products = $qb->get();
