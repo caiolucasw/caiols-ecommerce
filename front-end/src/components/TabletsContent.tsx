@@ -1,7 +1,8 @@
+import React from "react";
 import ListProductsContainer from "./ListProductsContainer";
 
-const HomeContent = () => {
+const TabletsContent = () => {
   return <ListProductsContainer />;
 };
 
-export default HomeContent;
+export default TabletsContent;

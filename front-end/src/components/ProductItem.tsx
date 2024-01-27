@@ -1,7 +1,11 @@
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { ProductInterface } from "../utils/types";
 
-const ProductItem = () => {
+interface ProductItemInterface {
+  product: ProductInterface;
+}
+const ProductItem = ({ product }: ProductItemInterface) => {
   const navigate = useNavigate();
   return (
     <Card
@@ -15,12 +19,12 @@ const ProductItem = () => {
           transition: "box-shadow .2s ease-in-out",
         },
       }}
-      onClick={() => navigate("/product/131")}
+      onClick={() => navigate(`/product/${product.id}`)}
     >
       <CardContent>
         <Box>
           <img
-            src="https://http2.mlstatic.com/D_NQ_NP_903017-MLU72748491739_112023-W.webp"
+            src={product.image_url}
             width="284px"
             height="284px"
             alt="notebook"
@@ -33,7 +37,7 @@ const ProductItem = () => {
         </Box>
         <Box>
           <Typography variant="subtitle1" fontWeight={700}>
-            Notebook Lenovo intel i7 16GB
+            {product.name}
           </Typography>
         </Box>
         <Box>
@@ -44,7 +48,7 @@ const ProductItem = () => {
               color: "#70e000",
             }}
           >
-            R$ 129,00
+            R$ {product.price}
           </Typography>
         </Box>
       </CardContent>

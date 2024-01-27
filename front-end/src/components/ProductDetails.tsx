@@ -8,16 +8,31 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageList from "./ImageList";
+import { useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector, RootState } from "../app/store";
+import { fetchProduct } from "../app/searchProductsSlice";
 
 const ProductDetails = () => {
   const [currentTab, setCurrentTab] = useState("description");
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const product = useAppSelector(
+    (state: RootState) => state.searchProducts.selectedProduct
+  );
+  useEffect(() => {
+    const productId = location.pathname.replace("/product/", "");
+    if (productId) {
+      dispatch(fetchProduct(productId));
+    }
+  }, [location]);
+
   return (
     <Box width="100%">
       <Box mb={3}>
         <Typography color="text." variant="h5" fontWeight={700}>
-          Notebook Lenovo Intel i7 16GB
+          {product?.name || ""}
         </Typography>
       </Box>
       <Box display="flex" gap={2} flexDirection={{ xs: "column", md: "row" }}>
@@ -39,7 +54,7 @@ const ProductDetails = () => {
             mt={3}
             mb={3}
           >
-            R$ 3.600,00
+            R$ {product?.price || ""}
           </Typography>
           <Select value={1} label="Quantidade" fullWidth size="small">
             <MenuItem value={1}>1</MenuItem>
@@ -79,28 +94,8 @@ const ProductDetails = () => {
           </Tabs>
 
           <Box p={2}>
-            {currentTab === "description" && (
-              <Box>
-                Descricao Lorem ipsum dolor sit, amet consectetur adipisicing
-                elit. Blanditiis, fuga cupiditate. Ducimus aliquam architecto
-                pariatur porro, doloribus et, numquam ex deleniti minima hic
-                dolore commodi praesentium. Cum ipsum officiis quibusdam
-                laudantium recusandae ab quidem vero, architecto unde, incidunt
-                ut. Aspernatur, ipsum impedit ipsa commodi nisi animi eum maxime
-                officiis iusto.
-              </Box>
-            )}
-            {currentTab === "details" && (
-              <Box>
-                Detalhes Lorem ipsum dolor sit, amet consectetur adipisicing
-                elit. Blanditiis, fuga cupiditate. Ducimus aliquam architecto
-                pariatur porro, doloribus et, numquam ex deleniti minima hic
-                dolore commodi praesentium. Cum ipsum officiis quibusdam
-                laudantium recusandae ab quidem vero, architecto unde, incidunt
-                ut. Aspernatur, ipsum impedit ipsa commodi nisi animi eum maxime
-                officiis iusto.
-              </Box>
-            )}
+            {currentTab === "description" && <Box>{product?.description}</Box>}
+            {currentTab === "details" && <Box>{product?.description}</Box>}
           </Box>
         </Box>
       </Box>

@@ -1,7 +1,7 @@
 import ListProductsContainer from "./ListProductsContainer";
 
-const HomeContent = () => {
+const PhonesContent = () => {
   return <ListProductsContainer />;
 };
 
-export default HomeContent;
+export default PhonesContent;

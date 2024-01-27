@@ -11,15 +11,10 @@ import { useEffect, useState } from "react";
 import { fetchProducts } from "../app/searchProductsSlice";
 import { RootState, useAppDispatch, useAppSelector } from "../app/store";
 import axios from "axios";
-
-interface CategoryInterface {
-  id: number;
-  label: string;
-  products_count: number;
-}
+import { CategoryProductsCountInterface } from "../utils/types";
 
 interface CategorySelectedInterface {
-  [key: number]: CategoryInterface;
+  [key: number]: CategoryProductsCountInterface;
 }
 
 const ProductFilters = () => {
@@ -29,11 +24,14 @@ const ProductFilters = () => {
   );
   const [selectedCategories, setSelectedCategories] =
     useState<CategorySelectedInterface>({});
-  const [categories, setCategories] = useState<CategoryInterface[]>([]);
+  const [categories, setCategories] = useState<
+    CategoryProductsCountInterface[]
+  >([]);
 
-  const addCategory = (category: CategoryInterface) => {
+  const addCategory = (category: CategoryProductsCountInterface) => {
     if (!selectedCategories[category.id]) {
       const categoriesAux = [...Object.keys(selectedCategories), category.id];
+      // @ts-ignore
       dispatch(fetchProducts({ name: productName, category: categoriesAux }));
       // make request with thunk
       setSelectedCategories((current) => ({
@@ -43,12 +41,13 @@ const ProductFilters = () => {
     }
   };
 
-  const removeCategory = (category: CategoryInterface) => {
+  const removeCategory = (category: CategoryProductsCountInterface) => {
     if (!selectedCategories[category.id]) return;
 
     const auxCategories = { ...selectedCategories };
     delete auxCategories[category.id];
     const categoriesAux = Object.keys(auxCategories);
+    // @ts-ignore
     dispatch(fetchProducts({ name: productName, category: categoriesAux }));
     setSelectedCategories(auxCategories);
   };

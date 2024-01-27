@@ -1,8 +1,26 @@
 import { Box, Grid } from "@mui/material";
 
 import ProductItem from "./ProductItem";
+import { fetchProducts } from "../app/searchProductsSlice";
+import { ProductInterface } from "../utils/types";
+import { useEffect } from "react";
+import { RootState, useAppDispatch, useAppSelector } from "../app/store";
 
-const ListProductsContainer = () => {
+interface InterfaceProps {
+  products: ProductInterface[];
+}
+
+const ListProductsContainer = ({ category }: { category?: string }) => {
+  const dispatch = useAppDispatch();
+  const products = useAppSelector(
+    (state: RootState) => state.searchProducts.products
+  );
+
+  useEffect(() => {
+    const categoryName = category || "";
+    dispatch(fetchProducts({ category_name: categoryName }));
+  }, []);
+
   return (
     <Box
       sx={{
@@ -15,11 +33,12 @@ const ListProductsContainer = () => {
         }}
       >
         <Grid container spacing={2}>
-          {[1, 2, 3, 4, 5, 6, 7].map((item) => (
-            <Grid key={item} item xs={12} sm={6} md={4} lg={3}>
-              <ProductItem key={item} />
-            </Grid>
-          ))}
+          {products &&
+            products.map((product) => (
+              <Grid key={product.id} item xs={12} sm={6} md={4} lg={3}>
+                <ProductItem product={product} />
+              </Grid>
+            ))}
         </Grid>
       </Box>
     </Box>
