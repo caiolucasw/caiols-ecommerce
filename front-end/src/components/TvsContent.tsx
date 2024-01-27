@@ -1,7 +1,7 @@
 import ListProductsContainer from "./ListProductsContainer";
 
 const TvsContent = () => {
-  return <ListProductsContainer />;
+  return <ListProductsContainer category="tvs" />;
 };
 
 export default TvsContent;

@@ -12,6 +12,7 @@ import { fetchProducts } from "../app/searchProductsSlice";
 import { RootState, useAppDispatch, useAppSelector } from "../app/store";
 import axios from "axios";
 import { CategoryProductsCountInterface } from "../utils/types";
+import { useLocation } from "react-router-dom";
 
 interface CategorySelectedInterface {
   [key: number]: CategoryProductsCountInterface;
@@ -27,6 +28,8 @@ const ProductFilters = () => {
   const [categories, setCategories] = useState<
     CategoryProductsCountInterface[]
   >([]);
+
+  const location = useLocation();
 
   const addCategory = (category: CategoryProductsCountInterface) => {
     if (!selectedCategories[category.id]) {
@@ -78,36 +81,40 @@ const ProductFilters = () => {
       }}
     >
       <CardContent>
-        <Typography variant="subtitle1" fontWeight={700} p={1}>
-          Categorias
-        </Typography>
-        <Box display="flex" flexDirection="column" gap={1} p={2}>
-          {categories.map((category) => (
-            <FormControlLabel
-              key={category.id}
-              control={
-                <Checkbox
-                  checked={
-                    selectedCategories[category.id] &&
-                    category.id === selectedCategories[category.id].id
+        {location && location.pathname === "/" && (
+          <>
+            <Typography variant="subtitle1" fontWeight={700} p={1}>
+              Categorias
+            </Typography>
+            <Box display="flex" flexDirection="column" gap={1} p={2}>
+              {categories.map((category) => (
+                <FormControlLabel
+                  key={category.id}
+                  control={
+                    <Checkbox
+                      checked={
+                        selectedCategories[category.id] &&
+                        category.id === selectedCategories[category.id].id
+                      }
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#70e000",
+                        },
+                      }}
+                      onChange={(event) => {
+                        if (event.target.checked) addCategory(category);
+                        else removeCategory(category);
+                      }}
+                    />
                   }
-                  sx={{
-                    "&.Mui-checked": {
-                      color: "#70e000",
-                    },
-                  }}
-                  onChange={(event) => {
-                    if (event.target.checked) addCategory(category);
-                    else removeCategory(category);
-                  }}
+                  label={`${category.label} (${category.products_count})`}
+                  sx={{ whiteSpace: "nowrap" }}
                 />
-              }
-              label={`${category.label} (${category.products_count})`}
-              sx={{ whiteSpace: "nowrap" }}
-            />
-          ))}
-        </Box>
-        <Divider />
+              ))}
+            </Box>
+            <Divider />
+          </>
+        )}
         <Typography variant="subtitle1" fontWeight={700} p={1}>
           Marcas
         </Typography>
