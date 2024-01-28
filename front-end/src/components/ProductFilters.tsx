@@ -112,20 +112,6 @@ const ProductFilters = () => {
     setSelectedCategories(auxCategories);
   };
 
-  const getCategories = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/categories/products_count`
-      );
-
-      if (res.status === 200 && res.data && res.data.data) {
-        setCategories(res.data.data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const addBrand = (brand: BrandProductsCountInterface) => {
     if (!selectedBrands[brand.id]) {
       const brandsAux = [...Object.keys(selectedBrands), brand.id.toString()];
@@ -164,14 +150,21 @@ const ProductFilters = () => {
     setSelectedBrands(auxBrands);
   };
 
-  const getBrands = async () => {
+  const getFilters = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/brands/products_count`
+        `${import.meta.env.VITE_BASE_API_URL}/products/filters`
       );
 
-      if (res.status === 200 && res.data && res.data.data) {
-        setBrands(res.data.data);
+      if (res.status === 200 && res.data) {
+        setCategories(res.data?.categories || []);
+        setBrands(res.data?.brands || []);
+        if (res.data.price) {
+          setSliderValue([
+            res.data.price.minPrice || 0,
+            res.data.price.maxPrice || 0,
+          ]);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -179,8 +172,7 @@ const ProductFilters = () => {
   };
 
   useEffect(() => {
-    getCategories();
-    getBrands();
+    getFilters();
   }, []);
 
   return (
@@ -216,6 +208,8 @@ const ProductFilters = () => {
                 <Slider
                   value={sliderValue}
                   onChange={handleChangeSlider}
+                  min={sliderValue[0]}
+                  max={sliderValue[1]}
                   disableSwap
                 />
                 <Box display="flex" justifyContent={"space-between"}>
