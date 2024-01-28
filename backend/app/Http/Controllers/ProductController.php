@@ -76,7 +76,7 @@ class ProductController extends Controller
 
             }
 
-            $filters['price'] = $query->get();
+            $filters['price'] = $query->get()->first();
         } catch (ModelNotFoundException $e) {
             return response()->json([ 'data' => 'resource not found'], 404);
 
