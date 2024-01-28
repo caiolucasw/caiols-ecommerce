@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -57,5 +59,29 @@ class ProductController extends Controller
         }
 
        return $product;
+    }
+
+    public function getFilters() {
+
+        $query = Product::query();
+        $categoryName = request()->query('category_name');
+
+        try {
+            $filters = [];
+            $filters['categories'] = Category::getCategoriesProductsCount();
+            $filters['brands'] = Brand::getBrandsProductsCount();
+            $query = $query->join('categories', 'products.category_id', '=', 'categories.id')->selectRaw('MAX(products.price) AS maxPrice, MIN(products.price) as minPrice');
+            if ($categoryName) {
+                $query = $query->where('categories.value', '=', $categoryName);
+
+            }
+
+            $filters['price'] = $query->get();
+        } catch (ModelNotFoundException $e) {
+            return response()->json([ 'data' => 'resource not found'], 404);
+
+        }
+
+       return $filters;
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
-use App\Models\Brand;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('products', [ProductController::class, 'get']);
+Route::get('products/filters', [ProductController::class, 'getFilters']);
 Route::get('products/{id}', [ProductController::class, 'findById']);
 
-Route::get('categories/products_count', [Category::class, 'getCategoriesProductsCount']);
-Route::get('brands/products_count', [Brand::class, 'getBrandsProductsCount']);
+Route::get('categories/products_count', [CategoryController::class, 'getCategoriesProductsCount']);
+Route::get('brands/products_count', [BrandController::class, 'getBrandsProductsCount']);

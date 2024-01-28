@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
 
-    public function getCategoriesProductsCount() {
+    public static function getCategoriesProductsCount() {
         $categoriesCount = Category::query()
                 ->join('products', 'categories.id', '=', 'products.category_id')
                 ->groupBy('categories.id', 'categories.label')
@@ -17,6 +17,6 @@ class Category extends Model
                 ->selectRaw('categories.id, categories.label, COUNT(products.id) as products_count')
                 ->get();
 
-            return response()->json(['data' => $categoriesCount], 200);
+        return $categoriesCount;
     }
 }

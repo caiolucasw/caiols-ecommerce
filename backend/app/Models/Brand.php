@@ -10,7 +10,7 @@ class Brand extends Model
     use HasFactory;
 
     
-    public function getBrandsProductsCount() {
+    public static function getBrandsProductsCount() {
         $categoriesCount = Brand::query()
                 ->join('products', 'brands.id', '=', 'products.brand_id')
                 ->groupBy('brands.id', 'brands.name')
@@ -18,6 +18,6 @@ class Brand extends Model
                 ->selectRaw('brands.id, brands.name, COUNT(products.id) as products_count')
                 ->get();
 
-            return response()->json(['data' => $categoriesCount], 200);
+        return $categoriesCount;
     }
 }
