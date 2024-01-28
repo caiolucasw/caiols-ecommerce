@@ -4,18 +4,21 @@ interface FetchProductsInterface {
 
 export const formatQueryParams = (filters: FetchProductsInterface): string => {
   const keys = Object.keys(filters);
-  let formattedQs = "?";
+  let formattedQs = "";
+  let qsParts: string[] = [];
 
   keys.forEach((key) => {
     if (filters[key]) {
       if (typeof filters[key] === "string") {
-        formattedQs += `${key}=${filters[key]}`;
-      } else if (Array.isArray(filters[key])) {
+        qsParts.push(`${key}=${filters[key]}`);
+      } else if (Array.isArray(filters[key]) && filters[key].length > 0) {
         // @ts-ignore
-        formattedQs += `${key}=${filters[key].join(",")}`;
+        qsParts.push(`${key}=${filters[key].join(",")}`);
       }
     }
   });
+
+  formattedQs = qsParts.length > 0 ? "?" + qsParts.join("&") : "";
 
   return formattedQs;
 };

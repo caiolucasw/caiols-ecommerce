@@ -54,7 +54,13 @@ const ProductDetails = () => {
             mt={3}
             mb={3}
           >
-            R$ {product?.price || ""}
+            R${" "}
+            {product?.price
+              ? product.price.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+              : ""}
           </Typography>
           <Select value={1} label="Quantidade" fullWidth size="small">
             <MenuItem value={1}>1</MenuItem>

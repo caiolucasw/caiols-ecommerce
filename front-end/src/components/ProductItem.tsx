@@ -1,6 +1,7 @@
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ProductInterface } from "../utils/types";
+import { addEllipseToString } from "../utils/formatString";
 
 interface ProductItemInterface {
   product: ProductInterface;
@@ -12,6 +13,7 @@ const ProductItem = ({ product }: ProductItemInterface) => {
       sx={{
         cursor: "pointer",
         boxShadow: 2,
+        height: "100%",
         borderRadius: 2,
         textDecoration: "none",
         "&:hover": {
@@ -37,7 +39,7 @@ const ProductItem = ({ product }: ProductItemInterface) => {
         </Box>
         <Box>
           <Typography variant="subtitle1" fontWeight={700}>
-            {product.name}
+            {addEllipseToString(product?.name || "", 60)}
           </Typography>
         </Box>
         <Box>
@@ -48,7 +50,11 @@ const ProductItem = ({ product }: ProductItemInterface) => {
               color: "#70e000",
             }}
           >
-            R$ {product.price}
+            R${" "}
+            {product.price?.toLocaleString("pt-BR", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            })}
           </Typography>
         </Box>
       </CardContent>

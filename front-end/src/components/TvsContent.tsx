@@ -1,7 +1,13 @@
 import ListProductsContainer from "./ListProductsContainer";
+import ProductFilters from "./ProductFilters";
 
 const TvsContent = () => {
-  return <ListProductsContainer category="tvs" />;
+  return (
+    <>
+      <ProductFilters />
+      <ListProductsContainer category="tvs" />;
+    </>
+  );
 };
 
 export default TvsContent;

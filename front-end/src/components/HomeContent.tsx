@@ -1,7 +1,13 @@
 import ListProductsContainer from "./ListProductsContainer";
+import ProductFilters from "./ProductFilters";
 
 const HomeContent = () => {
-  return <ListProductsContainer />;
+  return (
+    <>
+      <ProductFilters />
+      <ListProductsContainer />;
+    </>
+  );
 };
 
 export default HomeContent;

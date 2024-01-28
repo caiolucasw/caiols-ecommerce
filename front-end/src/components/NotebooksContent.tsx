@@ -1,8 +1,13 @@
-import React from "react";
 import ListProductsContainer from "./ListProductsContainer";
+import ProductFilters from "./ProductFilters";
 
 const NotebooksContent = () => {
-  return <ListProductsContainer category="laptops" />;
+  return (
+    <>
+      <ProductFilters />
+      <ListProductsContainer category="laptops" />;
+    </>
+  );
 };
 
 export default NotebooksContent;

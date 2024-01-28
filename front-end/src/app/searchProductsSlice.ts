@@ -8,6 +8,7 @@ export interface SearchProductsState {
   name: string;
   products: ProductInterface[];
   selectedProduct: ProductInterface | null;
+  loading: boolean;
   // categories: string[];
 }
 
@@ -15,6 +16,7 @@ const initialState: SearchProductsState = {
   name: "",
   products: [],
   selectedProduct: null,
+  loading: false,
   // categories: [],
 };
 
@@ -67,11 +69,14 @@ export const searchProductsSlice = createSlice({
     // }
   },
   extraReducers: (builder) => {
+    builder.addCase(fetchProducts.pending, (state, action) => {
+      state.loading = true;
+    });
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
       if (action.payload) {
         state.products = action.payload;
       }
-      console.log(action.payload);
+      state.loading = false;
     });
     builder.addCase(fetchProduct.fulfilled, (state, action) => {
       if (action.payload) {

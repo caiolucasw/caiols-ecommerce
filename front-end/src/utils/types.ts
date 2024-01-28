@@ -23,12 +23,19 @@ export interface ProductInterface {
 
 export interface FetchProductsInterface {
   name?: string;
-  category?: number[];
+  category?: string[];
+  brand?: string[];
   category_name?: string;
 }
 
 export interface CategoryProductsCountInterface {
   id: number;
   label: string;
+  products_count: number;
+}
+
+export interface BrandProductsCountInterface {
+  id: number;
+  name: string;
   products_count: number;
 }

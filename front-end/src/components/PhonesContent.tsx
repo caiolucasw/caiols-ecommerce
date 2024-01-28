@@ -1,7 +1,13 @@
 import ListProductsContainer from "./ListProductsContainer";
+import ProductFilters from "./ProductFilters";
 
 const PhonesContent = () => {
-  return <ListProductsContainer category="phones" />;
+  return (
+    <>
+      <ProductFilters />
+      <ListProductsContainer category="phones" />;
+    </>
+  );
 };
 
 export default PhonesContent;
