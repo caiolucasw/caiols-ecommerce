@@ -17,12 +17,14 @@ class ProductController extends Controller
         $qb = Product::query();
         $name = $request->query('name');
         $categories = $request->query('category');
-        $categoryName = $request->query('category_name');
+        $brands = $request->query('brand');
+        $categoryName = $request->query('category_name'); // specific page, ex: /notebooks, /tablets
 
         if ($name) {
             $qb = $qb->where('name', 'like', '%'.$name.'%');
         }
 
+        // get products from a list of categories id
         if ($categories && count(explode(',', $categories)) > 0) {
             $categoriesArray = explode(',', $categories);
             $qb = $qb->whereIn('category_id', $categoriesArray);
@@ -30,6 +32,13 @@ class ProductController extends Controller
         } else if ($categoryName) {
             $qb = $qb->join('categories', 'products.category_id', '=', 'categories.id');
             $qb = $qb->where('categories.value', '=', $categoryName);
+            
+        }
+
+        // get products from a list of brands id
+        if ($brands && count(explode(',', $brands)) > 0) {
+            $brandsArray = explode(',', $brands);
+            $qb = $qb->whereIn('brand_id', $brandsArray);
             
         }
 
