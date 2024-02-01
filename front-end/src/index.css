@@ -1,6 +1,7 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --primary-color: #70e000;
+  --primary-color-rgb: 112, 224, 0;
   --primary-color-dark: #52a103;
   --max-screen-width: 1400px;
 }

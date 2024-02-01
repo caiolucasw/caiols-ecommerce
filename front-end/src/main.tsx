@@ -3,7 +3,11 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import ProductDetails from "./components/ProductDetails.tsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import HomeContent from "./components/HomeContent.tsx";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Provider } from "react-redux";
@@ -14,6 +18,7 @@ import PhonesContent from "./components/PhonesContent.tsx";
 import TvsContent from "./components/TvsContent.tsx";
 import CamerasContent from "./components/CamerasContent.tsx";
 import MainLayout from "./components/MainLayout.tsx";
+import MyAccountPage from "./components/MyAccountPage.tsx";
 
 const theme = createTheme({
   palette: {
@@ -40,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "/minha-conta",
+        element: <MyAccountPage />,
+      },
+      {
+        path: "/meus-pedidos",
+        element: <Navigate to="/minha-conta?tab=orders" />,
       },
       {
         path: "",

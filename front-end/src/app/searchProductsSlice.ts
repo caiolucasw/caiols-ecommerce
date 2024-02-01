@@ -7,7 +7,7 @@ import { FetchProductsInterface, ProductInterface } from "../utils/types";
 export interface SearchProductsState {
   name: string;
   products: ProductInterface[];
-  selectedProduct: ProductInterface | null;
+  // selectedProduct: ProductInterface | null;
   loading: boolean;
   // categories: string[];
 }
@@ -15,7 +15,7 @@ export interface SearchProductsState {
 const initialState: SearchProductsState = {
   name: "",
   products: [],
-  selectedProduct: null,
+  // selectedProduct: null,
   loading: false,
   // categories: [],
 };
@@ -38,20 +38,20 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-export const fetchProduct = createAsyncThunk(
-  "product/{id}",
-  async (id: string) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/products/${id}`
-      );
-      return response.data ? (response.data as ProductInterface) : null;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
-  }
-);
+// export const fetchProduct = createAsyncThunk(
+//   "product/{id}",
+//   async (id: string) => {
+//     try {
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_BASE_API_URL}/products/${id}`
+//       );
+//       return response.data ? (response.data as ProductInterface) : null;
+//     } catch (err) {
+//       console.log(err);
+//       return null;
+//     }
+//   }
+// );
 
 export const searchProductsSlice = createSlice({
   name: "searchProducts",
@@ -78,11 +78,11 @@ export const searchProductsSlice = createSlice({
       }
       state.loading = false;
     });
-    builder.addCase(fetchProduct.fulfilled, (state, action) => {
-      if (action.payload) {
-        state.selectedProduct = action.payload;
-      }
-    });
+    // builder.addCase(fetchProduct.fulfilled, (state, action) => {
+    //   if (action.payload) {
+    //     state.selectedProduct = action.payload;
+    //   }
+    // });
   },
 });
 

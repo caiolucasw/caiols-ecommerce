@@ -50,7 +50,6 @@ const listItems = [
 const DepartmentList = ({ styles }: { styles?: React.CSSProperties }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
 
   return (
     <>

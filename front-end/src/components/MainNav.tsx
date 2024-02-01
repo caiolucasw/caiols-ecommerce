@@ -2,22 +2,28 @@ import {
   Box,
   Drawer,
   IconButton,
+  MenuItem,
+  Menu,
   Typography,
   useMediaQuery,
+  MenuList,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DepartmentList from "./DepartmentList";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchInput from "./SearchInput";
 
 const MainNav = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = Boolean(anchorEl);
   const largeScreen = useMediaQuery(theme.breakpoints.up("md"));
   const smallScreen = !largeScreen;
 
@@ -33,6 +39,14 @@ const MainNav = () => {
 
       setDrawerOpen(open);
     };
+
+  const onOpenMenuAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const onCloseMenuAccount = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (largeScreen) setDrawerOpen(false);
@@ -157,12 +171,36 @@ const MainNav = () => {
           </Box>
           <Box>
             <IconButton
+              id="account-icon"
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
               sx={{
                 color: "white",
               }}
+              onClick={onOpenMenuAccount}
             >
               <PersonIcon />
             </IconButton>
+            <Menu
+              id="account-menu"
+              open={open}
+              onClose={onCloseMenuAccount}
+              anchorEl={anchorEl}
+              MenuListProps={{
+                "aria-labelledby": "account-icon",
+              }}
+            >
+              <MenuList>
+                <MenuItem onClick={() => navigate("/meus-pedidos")}>
+                  Meus Pedidos
+                </MenuItem>
+                <MenuItem onClick={() => navigate("/minha-conta")}>
+                  Minha Conta
+                </MenuItem>
+                <MenuItem onClick={() => console.log("sair")}>Sair</MenuItem>
+              </MenuList>
+            </Menu>
           </Box>
         </Box>
       </Box>

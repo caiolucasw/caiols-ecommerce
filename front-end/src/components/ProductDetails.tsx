@@ -12,21 +12,44 @@ import { useEffect, useState } from "react";
 import ImageList from "./ImageList";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector, RootState } from "../app/store";
-import { fetchProduct } from "../app/searchProductsSlice";
+import axios from "axios";
+import { ProductInterface } from "../utils/types";
+// import { fetchProduct } from "../app/searchProductsSlice";
 
 const ProductDetails = () => {
   const [currentTab, setCurrentTab] = useState("description");
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const product = useAppSelector(
-    (state: RootState) => state.searchProducts.selectedProduct
-  );
+  const [product, setProduct] = useState<ProductInterface | null>(null);
+  const productId = location.pathname.replace("/product/", "");
+  // const product = useAppSelector(
+  //   (state: RootState) => state.searchProducts.selectedProduct
+  // );
+
+  const getProductById = async (id: string) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_API_URL}/products/${id}`
+      );
+      if (response.status === 200 && response.data) {
+        setProduct(response.data);
+      }
+
+      return response.data ? (response.data as ProductInterface) : null;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const productId = location.pathname.replace("/product/", "");
     if (productId) {
-      dispatch(fetchProduct(productId));
+      getProductById(productId);
     }
   }, [location]);
+
+  if (!productId) {
+    return <></>;
+  }
 
   return (
     <Box width="100%">
