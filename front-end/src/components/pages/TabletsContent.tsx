@@ -1,6 +1,6 @@
 import React from "react";
-import ListProductsContainer from "./ListProductsContainer";
-import ProductFilters from "./ProductFilters";
+import ListProductsContainer from "../ListProductsContainer";
+import ProductFilters from "../ProductFilters";
 
 const TabletsContent = () => {
   return (

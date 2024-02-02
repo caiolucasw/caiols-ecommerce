@@ -8,17 +8,19 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import HomeContent from "./components/HomeContent.tsx";
+import HomeContent from "./components/pages/HomeContent.tsx";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
-import NotebooksContent from "./components/NotebooksContent.tsx";
-import TabletsContent from "./components/TabletsContent.tsx";
-import PhonesContent from "./components/PhonesContent.tsx";
-import TvsContent from "./components/TvsContent.tsx";
-import CamerasContent from "./components/CamerasContent.tsx";
+import NotebooksContent from "./components/pages/NotebooksContent.tsx";
+import TabletsContent from "./components/pages/TabletsContent.tsx";
+import PhonesContent from "./components/pages/PhonesContent.tsx";
+import TvsContent from "./components/pages/TvsContent.tsx";
+import CamerasContent from "./components/pages/CamerasContent.tsx";
 import MainLayout from "./components/MainLayout.tsx";
-import MyAccountPage from "./components/MyAccountPage.tsx";
+import MyAccountPage from "./components/pages/MyAccountPage.tsx";
+import Login from "./components/pages/Login.tsx";
+import Signup from "./components/pages/Signup.tsx";
 
 const theme = createTheme({
   palette: {
@@ -38,6 +40,14 @@ const theme = createTheme({
 });
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Signup />,
+  },
   {
     path: "/",
     element: <App />,

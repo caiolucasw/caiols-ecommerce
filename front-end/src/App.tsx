@@ -1,10 +1,8 @@
-import './App.css'
-import MainComponent from './components/MainComponent'
+import "./App.css";
+import MainComponent from "./components/pages/MainComponent";
 
 function App() {
-  return (
-    <MainComponent />
-  )
+  return <MainComponent />;
 }
 
 export default App;

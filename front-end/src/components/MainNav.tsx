@@ -7,16 +7,20 @@ import {
   Typography,
   useMediaQuery,
   MenuList,
+  Button,
+  Link,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouteLink, useNavigate } from "react-router-dom";
 import DepartmentList from "./DepartmentList";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchInput from "./SearchInput";
+
+const user = null;
 
 const MainNav = () => {
   const navigate = useNavigate();
@@ -40,7 +44,9 @@ const MainNav = () => {
       setDrawerOpen(open);
     };
 
-  const onOpenMenuAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const onOpenMenuAccount = (
+    event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>
+  ) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -123,7 +129,7 @@ const MainNav = () => {
           </Box>
         )}
         <Box
-          component={Link}
+          component={RouteLink}
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -169,7 +175,13 @@ const MainNav = () => {
               <ShoppingCartIcon />
             </IconButton>
           </Box>
-          <Box>
+          <Box
+            sx={{
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => !user && onOpenMenuAccount(e)}
+            onMouseLeave={() => !user && onCloseMenuAccount()}
+          >
             <IconButton
               id="account-icon"
               aria-controls={open ? "account-menu" : undefined}
@@ -178,7 +190,7 @@ const MainNav = () => {
               sx={{
                 color: "white",
               }}
-              onClick={onOpenMenuAccount}
+              onClick={(e) => user && onOpenMenuAccount(e)}
             >
               <PersonIcon />
             </IconButton>
@@ -192,13 +204,46 @@ const MainNav = () => {
               }}
             >
               <MenuList>
-                <MenuItem onClick={() => navigate("/meus-pedidos")}>
-                  Meus Pedidos
-                </MenuItem>
-                <MenuItem onClick={() => navigate("/minha-conta")}>
-                  Minha Conta
-                </MenuItem>
-                <MenuItem onClick={() => console.log("sair")}>Sair</MenuItem>
+                {user ? (
+                  <>
+                    <MenuItem onClick={() => navigate("/meus-pedidos")}>
+                      Meus Pedidos
+                    </MenuItem>
+                    <MenuItem onClick={() => navigate("/minha-conta")}>
+                      Minha Conta
+                    </MenuItem>
+                    <MenuItem onClick={() => console.log("sair")}>
+                      Sair
+                    </MenuItem>
+                  </>
+                ) : (
+                  <Box px={1} py={0.2}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={() => navigate("/login")}
+                      sx={{
+                        display: "block",
+                        maxWidth: "200px",
+                        mb: 1,
+                        fontWeight: 700,
+                      }}
+                    >
+                      FAÇA SEU LOGIN
+                    </Button>
+                    <Typography variant="caption">
+                      Cliente novo?{" "}
+                      <Link
+                        component={RouteLink}
+                        to="/register"
+                        underline="none"
+                      >
+                        Cadastre-se
+                      </Link>
+                    </Typography>
+                  </Box>
+                )}
               </MenuList>
             </Menu>
           </Box>

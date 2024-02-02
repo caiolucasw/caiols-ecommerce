@@ -2,8 +2,8 @@ import { Box, Button, Grid, SvgIcon, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import MyAccount from "./MyAccount";
-import MyOrders from "./order/MyOrders";
+import MyAccount from "../MyAccount";
+import MyOrders from "../order/MyOrders";
 import { useLocation } from "react-router-dom";
 
 const tabs = [
