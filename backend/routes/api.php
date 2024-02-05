@@ -30,4 +30,5 @@ Route::get('brands/products_count', [BrandController::class, 'getBrandsProductsC
 
 Route::middleware('auth:api')->group(function() {
     Route::post('/logout', [UserAuthController::class, 'logout']);
+    Route::get('/user', [UserAuthController::class, 'getUserBasicInfo']);
 });

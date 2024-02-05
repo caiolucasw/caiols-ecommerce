@@ -33,7 +33,7 @@ const Signup = () => {
               variant="inherit"
               sx={{
                 display: "inline-block",
-                color: "#70e000 !important",
+                color: "var(--primary-color)",
               }}
             >
               ls

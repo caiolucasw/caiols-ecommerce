@@ -19,8 +19,7 @@ import { Link as RouteLink, useNavigate } from "react-router-dom";
 import DepartmentList from "./DepartmentList";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchInput from "./SearchInput";
-
-const user = null;
+import { useAppSelector } from "../app/store";
 
 const MainNav = () => {
   const navigate = useNavigate();
@@ -30,6 +29,7 @@ const MainNav = () => {
   const open = Boolean(anchorEl);
   const largeScreen = useMediaQuery(theme.breakpoints.up("md"));
   const smallScreen = !largeScreen;
+  const userId = useAppSelector((state) => state.user.id);
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -179,8 +179,8 @@ const MainNav = () => {
             sx={{
               cursor: "pointer",
             }}
-            onMouseEnter={(e) => !user && onOpenMenuAccount(e)}
-            onMouseLeave={() => !user && onCloseMenuAccount()}
+            onMouseEnter={(e) => !userId && onOpenMenuAccount(e)}
+            onMouseLeave={() => !userId && onCloseMenuAccount()}
           >
             <IconButton
               id="account-icon"
@@ -190,7 +190,7 @@ const MainNav = () => {
               sx={{
                 color: "white",
               }}
-              onClick={(e) => user && onOpenMenuAccount(e)}
+              onClick={(e) => userId && onOpenMenuAccount(e)}
             >
               <PersonIcon />
             </IconButton>
@@ -199,52 +199,46 @@ const MainNav = () => {
               open={open}
               onClose={onCloseMenuAccount}
               anchorEl={anchorEl}
+              disableAutoFocus
+              disableAutoFocusItem
               MenuListProps={{
                 "aria-labelledby": "account-icon",
               }}
             >
-              <MenuList>
-                {user ? (
-                  <>
-                    <MenuItem onClick={() => navigate("/meus-pedidos")}>
-                      Meus Pedidos
-                    </MenuItem>
-                    <MenuItem onClick={() => navigate("/minha-conta")}>
-                      Minha Conta
-                    </MenuItem>
-                    <MenuItem onClick={() => console.log("sair")}>
-                      Sair
-                    </MenuItem>
-                  </>
-                ) : (
-                  <Box px={1} py={0.2}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      onClick={() => navigate("/login")}
-                      sx={{
-                        display: "block",
-                        maxWidth: "200px",
-                        mb: 1,
-                        fontWeight: 700,
-                      }}
-                    >
-                      FAÇA SEU LOGIN
-                    </Button>
-                    <Typography variant="caption">
-                      Cliente novo?{" "}
-                      <Link
-                        component={RouteLink}
-                        to="/register"
-                        underline="none"
-                      >
-                        Cadastre-se
-                      </Link>
-                    </Typography>
-                  </Box>
-                )}
-              </MenuList>
+              {userId ? (
+                <MenuList>
+                  <MenuItem onClick={() => navigate("/meus-pedidos")}>
+                    Meus Pedidos
+                  </MenuItem>
+                  <MenuItem onClick={() => navigate("/minha-conta")}>
+                    Minha Conta
+                  </MenuItem>
+                  <MenuItem onClick={() => console.log("sair")}>Sair</MenuItem>
+                </MenuList>
+              ) : (
+                <Box px={1} py={0.2}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={() => navigate("/login")}
+                    sx={{
+                      display: "block",
+                      maxWidth: "200px",
+                      mb: 1,
+                      fontWeight: 700,
+                    }}
+                  >
+                    FAÇA SEU LOGIN
+                  </Button>
+                  <Typography variant="caption">
+                    Cliente novo?{" "}
+                    <Link component={RouteLink} to="/register" underline="none">
+                      Cadastre-se
+                    </Link>
+                  </Typography>
+                </Box>
+              )}
             </Menu>
           </Box>
         </Box>

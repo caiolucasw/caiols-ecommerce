@@ -45,7 +45,14 @@ class UserAuthController extends Controller
 
         if ($user instanceof User) {
             $token = $user->createToken('API Token')->accessToken;
-            return response(['user' => auth()->user(), 'token' => $token]);
+            $user = auth()->user();
+            $user = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'token' => $token
+            ];
+            return response()->json($user);
         } else {
             return response(['error_message' => 'Incorrect Details. 
             Please try again']);
@@ -64,6 +71,22 @@ class UserAuthController extends Controller
         }
 
         return response()->json(['message' => 'error revoking token'], 404);
+
+    }
+
+    public function getUserBasicInfo() {
+        if (auth()->user() instanceof User) {
+            $user = auth()->user();
+            $user = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+            return response()->json($user, 200);
+            
+        }
+
+        return response()->json(['message' => 'user not found', 404]);
 
     }
 }
