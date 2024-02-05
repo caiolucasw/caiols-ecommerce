@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
@@ -17,9 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/register', [UserAuthController::class, 'register']);
+Route::post('/login', [UserAuthController::class, 'login']);
 
 Route::get('products', [ProductController::class, 'get']);
 Route::get('products/filters', [ProductController::class, 'getFilters']);
@@ -27,3 +27,7 @@ Route::get('products/{id}', [ProductController::class, 'findById']);
 
 Route::get('categories/products_count', [CategoryController::class, 'getCategoriesProductsCount']);
 Route::get('brands/products_count', [BrandController::class, 'getBrandsProductsCount']);
+
+Route::middleware('auth:api')->group(function() {
+    Route::post('/logout', [UserAuthController::class, 'logout']);
+});
