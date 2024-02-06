@@ -32,7 +32,7 @@ export const login = createAsyncThunk(
       );
       return response.data as UserState;
     } catch (err) {
-      console.log(err);
+      throw new Error("resource not found");
       return null;
     }
   }
@@ -48,12 +48,31 @@ export const getUser = createAsyncThunk("user", async () => {
       {
         headers: {
           "Content-Type": "application/json",
-          // prettier-ignore
-          'Authorizaton': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
     return response.data as UserState;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+});
+
+export const logout = createAsyncThunk("logout", async (user: UserState) => {
+  if (!user || !user.token) return;
+
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_BASE_API_URL}/logout`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    return response && response.data;
   } catch (err) {
     console.log(err);
     return null;
@@ -83,21 +102,22 @@ export const userSlice = createSlice({
       if (state) {
         state.token = action.payload;
       }
+
+      return state;
+    },
+    setUser: (state, action: PayloadAction<UserState>) => {
+      if (state) {
+        state = { ...state, ...action.payload };
+        const token = action.payload?.token;
+        if (token) {
+          localStorage.setItem("token", token);
+        }
+      }
+
+      return state;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(login.pending, (state, action) => {
-      if (state) state.loading = true;
-      return state;
-    });
-    builder.addCase(login.fulfilled, (state, action) => {
-      state = { ...state, ...action.payload, loading: false };
-      const token = action.payload?.token;
-      if (token) {
-        localStorage.setItem("token", token);
-      }
-      return state;
-    });
     builder.addCase(getUser.fulfilled, (state, action) => {
       if (action.payload) {
         const token = localStorage.getItem("token");
@@ -106,10 +126,20 @@ export const userSlice = createSlice({
       } else {
         localStorage.removeItem("token");
       }
+
+      return state;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      if (action.payload) {
+        state = initialState;
+        localStorage.removeItem("token");
+      }
+
+      return state;
     });
   },
 });
 
-export const { setToken } = userSlice.actions;
+export const { setToken, setUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -19,7 +19,8 @@ import { Link as RouteLink, useNavigate } from "react-router-dom";
 import DepartmentList from "./DepartmentList";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchInput from "./SearchInput";
-import { useAppSelector } from "../app/store";
+import { useAppDispatch, useAppSelector } from "../app/store";
+import { logout } from "../app/userSlice";
 
 const MainNav = () => {
   const navigate = useNavigate();
@@ -29,7 +30,9 @@ const MainNav = () => {
   const open = Boolean(anchorEl);
   const largeScreen = useMediaQuery(theme.breakpoints.up("md"));
   const smallScreen = !largeScreen;
-  const userId = useAppSelector((state) => state.user.id);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+  const userId = user && user.id;
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -213,7 +216,9 @@ const MainNav = () => {
                   <MenuItem onClick={() => navigate("/minha-conta")}>
                     Minha Conta
                   </MenuItem>
-                  <MenuItem onClick={() => console.log("sair")}>Sair</MenuItem>
+                  <MenuItem onClick={() => dispatch(logout(user))}>
+                    Sair
+                  </MenuItem>
                 </MenuList>
               ) : (
                 <Box px={1} py={0.2}>

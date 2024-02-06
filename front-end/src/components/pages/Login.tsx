@@ -1,15 +1,42 @@
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Link, TextField, Typography } from "@mui/material";
 import { Link as RouteLink, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import { login } from "../../app/userSlice";
-import { useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { setUser } from "../../app/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.user.token);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (values: { email: string; password: string }) => {
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_API_URL}/login`,
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res && res.status === 200) {
+        dispatch(setUser(res.data));
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setError(true);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (token) {
@@ -96,7 +123,7 @@ const Login = () => {
                 .required("Campo obrigatório"),
             })}
             onSubmit={(values) => {
-              dispatch(login(values));
+              handleLogin(values);
             }}
           >
             {({
@@ -109,6 +136,15 @@ const Login = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box display="flex" flexDirection="column" gap={3}>
+                  {error && (
+                    <Box>
+                      <Alert variant="standard" color="error">
+                        <Typography variant="body2" fontWeight={700}>
+                          Email ou senha incorretos!
+                        </Typography>
+                      </Alert>
+                    </Box>
+                  )}
                   <Box>
                     <TextField
                       name="email"
@@ -127,6 +163,7 @@ const Login = () => {
                   <Box>
                     <TextField
                       name="password"
+                      type="password"
                       variant="outlined"
                       size="small"
                       placeholder="Senha"
@@ -146,6 +183,7 @@ const Login = () => {
                       fullWidth
                       type="submit"
                       sx={{ fontWeight: 700 }}
+                      disabled={loading}
                     >
                       ENTRAR
                     </Button>

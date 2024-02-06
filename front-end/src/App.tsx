@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import "./App.css";
-import MainComponent from "./components/pages/MainComponent";
 import { useAppDispatch } from "./app/store";
 import { getUser } from "./app/userSlice";
+import { Outlet } from "react-router-dom";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -10,7 +10,8 @@ function App() {
   useEffect(() => {
     dispatch(getUser());
   }, []);
-  return <MainComponent />;
+
+  return <Outlet />;
 }
 
 export default App;

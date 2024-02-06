@@ -21,6 +21,7 @@ import MainLayout from "./components/MainLayout.tsx";
 import MyAccountPage from "./components/pages/MyAccountPage.tsx";
 import Login from "./components/pages/Login.tsx";
 import Signup from "./components/pages/Signup.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const theme = createTheme({
   palette: {
@@ -41,31 +42,18 @@ const theme = createTheme({
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Signup />,
-  },
-  {
     path: "/",
     element: <App />,
     children: [
       {
-        path: "/product/:id",
-        element: <ProductDetails />,
+        path: "/login",
+        element: <Login />,
       },
       {
-        path: "/minha-conta",
-        element: <MyAccountPage />,
+        path: "/register",
+        element: <Signup />,
       },
       {
-        path: "/meus-pedidos",
-        element: <Navigate to="/minha-conta?tab=orders" />,
-      },
-      {
-        path: "",
         element: <MainLayout />,
         children: [
           {
@@ -87,6 +75,23 @@ const router = createBrowserRouter([
           {
             path: "/cameras",
             element: <CamerasContent />,
+          },
+          {
+            path: "/product/:id",
+            element: <ProductDetails />,
+          },
+          {
+            element: <ProtectedRoute />,
+            children: [
+              {
+                path: "/minha-conta",
+                element: <MyAccountPage />,
+              },
+              {
+                path: "/meus-pedidos",
+                element: <Navigate to="/minha-conta?tab=orders" />,
+              },
+            ],
           },
           {
             path: "",
