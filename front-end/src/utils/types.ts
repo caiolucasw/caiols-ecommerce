@@ -9,6 +9,16 @@ export interface BrandInterface {
   name: string;
   image_url: string;
 }
+
+export interface ProductImage {
+  id: number;
+  name: string;
+  image_url: string;
+  product_id: string;
+  created_at: string;
+  updated: string;
+}
+
 export interface ProductInterface {
   id: string;
   name: string;
@@ -19,6 +29,7 @@ export interface ProductInterface {
   category_id: number;
   category?: CategoryInterface;
   brand?: BrandInterface;
+  product_images: ProductImage[];
 }
 
 export interface FetchProductsInterface {

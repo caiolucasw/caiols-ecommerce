@@ -1,30 +1,33 @@
 import {
   Box,
   Button,
-  Grid,
+  InputLabel,
   MenuItem,
   Select,
   Tab,
   Tabs,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import ImageList from "./ImageList";
-import { useLocation } from "react-router-dom";
-import { useAppDispatch, useAppSelector, RootState } from "../app/store";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ProductInterface } from "../utils/types";
-// import { fetchProduct } from "../app/searchProductsSlice";
+
+interface ItemInfoInterface {
+  quantity: string;
+}
 
 const ProductDetails = () => {
   const [currentTab, setCurrentTab] = useState("description");
+  const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useAppDispatch();
   const [product, setProduct] = useState<ProductInterface | null>(null);
   const productId = location.pathname.replace("/product/", "");
-  // const product = useAppSelector(
-  //   (state: RootState) => state.searchProducts.selectedProduct
-  // );
+  const [itemInfo, setItemInfo] = useState<ItemInfoInterface>({
+    quantity: "1",
+  });
 
   const getProductById = async (id: string) => {
     try {
@@ -38,6 +41,7 @@ const ProductDetails = () => {
       return response.data ? (response.data as ProductInterface) : null;
     } catch (err) {
       console.log(err);
+      navigate("/");
     }
   };
 
@@ -58,9 +62,15 @@ const ProductDetails = () => {
           {product?.name || ""}
         </Typography>
       </Box>
-      <Box display="flex" gap={2} flexDirection={{ xs: "column", md: "row" }}>
+      <Box
+        display="flex"
+        gap={{ xs: 4, md: 2 }}
+        flexDirection={{ xs: "column", md: "row" }}
+      >
         <Box flex={1} display="flex">
-          <ImageList />
+          {product?.product_images && (
+            <ImageList productImages={product.product_images} />
+          )}
         </Box>
         <Box
           sx={{
@@ -68,6 +78,7 @@ const ProductDetails = () => {
             boxShadow: 1,
             borderRadius: 2,
             p: 2,
+            maxHeight: 350,
           }}
         >
           <Typography
@@ -85,13 +96,22 @@ const ProductDetails = () => {
                 })
               : ""}
           </Typography>
-          <Select value={1} label="Quantidade" fullWidth size="small">
+          <TextField
+            select
+            value={itemInfo.quantity}
+            label="Quantidade"
+            onChange={(e) =>
+              setItemInfo((curr) => ({ ...curr, quantity: e.target.value }))
+            }
+            fullWidth
+            size="small"
+          >
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
             <MenuItem value={4}>4</MenuItem>
             <MenuItem value={5}>5</MenuItem>
-          </Select>
+          </TextField>
           <Box>
             <Box my={2}>
               <Button variant="contained" color="primary" fullWidth>

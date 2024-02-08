@@ -44,7 +44,7 @@ class ProductController extends Controller
             
         }
 
-        $products = $qb->get();
+        $products = $qb->selectRaw('products.*')->get();
 
         return response()->json(['data' => $products->toArray()], 200);       
     }
@@ -52,7 +52,7 @@ class ProductController extends Controller
     public function findById($id) {
 
         try {
-            $product = Product::where('id', $id)->with('category')->with('brand')->firstOrFail();
+            $product = Product::where('id', $id)->with('category')->with('brand')->with('product_images')->firstOrFail();
         } catch (ModelNotFoundException $e) {
             return response()->json([ 'data' => 'resource not found'], 404);
 

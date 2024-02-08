@@ -22,6 +22,7 @@ import MyAccountPage from "./components/pages/MyAccountPage.tsx";
 import Login from "./components/pages/Login.tsx";
 import Signup from "./components/pages/Signup.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import CartPage from "./components/pages/CartPage.tsx";
 
 const theme = createTheme({
   palette: {
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
           {
             path: "/product/:id",
             element: <ProductDetails />,
+          },
+          {
+            path: "/carrinho",
+            element: <CartPage />,
           },
           {
             element: <ProtectedRoute />,

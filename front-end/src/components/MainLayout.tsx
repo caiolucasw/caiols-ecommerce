@@ -15,7 +15,7 @@ const MainLayout = () => {
       <Header />
       <Box
         sx={{
-          px: 4,
+          px: { xs: 2, md: 4 },
           flex: 1,
         }}
       >

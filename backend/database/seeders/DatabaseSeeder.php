@@ -67,12 +67,16 @@ class DatabaseSeeder extends Seeder
             "id" => Str::uuid(),
             "name" => 'Apple iMac 27"',
             "description" => "iMac performance is at an all-time high with tenth-generation Intel Core processors, powerful AMD Radeon Pro 5000 series graphics, ultrafast SSD storage, Thunderbolt 3 (USB-C) connectivity. And it all comes to life on a stunning 27-inch Retina 5K display with one billion colors and 500 nits of brightness that delivers vibrant images and razor-sharp text.",
-            "category_id" => 1,
+            "category_id" => 2,
             "brand_id" => 2,
             "price" =>  10000,
-            "image_url" => 'https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_.jpg'
+            "image_url" => 'https://imgs.casasbahia.com.br/55015690/1xg.jpg'
         ])->product_images()->saveMany([
-            new ProductImages(['image_name' => 'usb_external_hard2_drive2', 'image_url' => 'https://www.lifewire.com/thmb/iYN2TE_OJ5uYqsdd8gsQhStgzs8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/usb-3-0-cable-56a6fa1c3df78cf772913c6b.jpg'])
+            new ProductImages(['image_name' => 'usb_external_hard2_drive2', 'image_url' => 'https://imgs.casasbahia.com.br/55015690/1xg.jpg']),
+            new ProductImages(['image_name' => 'imac2name', 'image_url' => 'https://imgs.casasbahia.com.br/55015690/2xg.jpg?imwidth=500']),
+            new ProductImages(['image_name' => 'imac3name', 'image_url' => 'https://imgs.casasbahia.com.br/55015690/3xg.jpg?imwidth=500']),
+            new ProductImages(['image_name' => 'imac3name', 'image_url' => 'https://www.voke.shop/media/catalog/product/a/2/a2159_128gb_1-1.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=700&width=700&canvas=700:700']),
+
 
         ]);
     }

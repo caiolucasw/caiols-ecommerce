@@ -150,7 +150,7 @@ const MainNav = () => {
               variant="inherit"
               sx={{
                 display: "inline-block",
-                color: "#70e000 !important",
+                color: "var(--primary-color)",
               }}
             >
               ls
@@ -174,6 +174,7 @@ const MainNav = () => {
               sx={{
                 color: "white",
               }}
+              onClick={() => navigate("/carrinho")}
             >
               <ShoppingCartIcon />
             </IconButton>
@@ -206,10 +207,24 @@ const MainNav = () => {
               disableAutoFocusItem
               MenuListProps={{
                 "aria-labelledby": "account-icon",
+                sx: {
+                  backgroundColor: "rgba(19, 21, 26, 1)",
+                },
               }}
             >
               {userId ? (
-                <MenuList>
+                <MenuList
+                  sx={{
+                    p: 0.5,
+                    "& > li": {
+                      p: 1.5,
+                      color: "white",
+                    },
+                    "& > li:hover": {
+                      backgroundColor: "rgba(255, 255, 255,0.1)",
+                    },
+                  }}
+                >
                   <MenuItem onClick={() => navigate("/meus-pedidos")}>
                     Meus Pedidos
                   </MenuItem>
@@ -236,7 +251,7 @@ const MainNav = () => {
                   >
                     FAÇA SEU LOGIN
                   </Button>
-                  <Typography variant="caption">
+                  <Typography variant="caption" sx={{ color: "white" }}>
                     Cliente novo?{" "}
                     <Link component={RouteLink} to="/register" underline="none">
                       Cadastre-se
