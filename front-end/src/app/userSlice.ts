@@ -7,6 +7,7 @@ export interface UserState {
   id: number | null;
   token?: string | null;
   loading?: boolean;
+  cart_items_count?: number;
 }
 
 let initialState: UserState = {
@@ -116,6 +117,12 @@ export const userSlice = createSlice({
 
       return state;
     },
+    updateCartCount: (state, action: PayloadAction<number>) => {
+      if (state) {
+        state = { ...state, cart_items_count: action.payload };
+      }
+      return state;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getUser.fulfilled, (state, action) => {
@@ -140,6 +147,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setToken, setUser } = userSlice.actions;
+export const { setToken, setUser, updateCartCount } = userSlice.actions;
 
 export default userSlice.reducer;

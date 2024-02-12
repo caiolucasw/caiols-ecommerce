@@ -29,7 +29,7 @@ export interface ProductInterface {
   category_id: number;
   category?: CategoryInterface;
   brand?: BrandInterface;
-  product_images: ProductImage[];
+  product_images?: ProductImage[];
 }
 
 export interface FetchProductsInterface {
@@ -49,4 +49,22 @@ export interface BrandProductsCountInterface {
   id: number;
   name: string;
   products_count: number;
+}
+
+export interface CartItem {
+  id: number;
+  cart_id: number;
+  product_id: string;
+  quantity: number;
+  created_at: string | null;
+  updated_at: string | null;
+  product: ProductInterface;
+}
+
+export interface Cart {
+  id: number;
+  user_id: number;
+  created_at: string | null;
+  updated_at: string | null;
+  cart_items: CartItem[];
 }

@@ -1,9 +1,7 @@
 import {
   Box,
   Button,
-  InputLabel,
   MenuItem,
-  Select,
   Tab,
   Tabs,
   TextField,
@@ -14,6 +12,8 @@ import ImageList from "./ImageList";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ProductInterface } from "../utils/types";
+import { useAppDispatch, useAppSelector } from "../app/store";
+import { updateCartCount } from "../app/userSlice";
 
 interface ItemInfoInterface {
   quantity: string;
@@ -25,6 +25,8 @@ const ProductDetails = () => {
   const location = useLocation();
   const [product, setProduct] = useState<ProductInterface | null>(null);
   const productId = location.pathname.replace("/product/", "");
+  const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const [itemInfo, setItemInfo] = useState<ItemInfoInterface>({
     quantity: "1",
   });
@@ -37,11 +39,36 @@ const ProductDetails = () => {
       if (response.status === 200 && response.data) {
         setProduct(response.data);
       }
-
-      return response.data ? (response.data as ProductInterface) : null;
     } catch (err) {
       console.log(err);
       navigate("/");
+    }
+  };
+
+  const addProductCart = async (id: string, quantity: string) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_API_URL}/cart/products`,
+        {
+          product: id,
+          quantity,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (response.status === 200 && response.data) {
+        setProduct(response.data);
+        dispatch(updateCartCount(Number(quantity)));
+      }
+
+      console.log(response);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -119,7 +146,12 @@ const ProductDetails = () => {
               </Button>
             </Box>
             <Box>
-              <Button variant="contained" color="inherit" fullWidth>
+              <Button
+                variant="contained"
+                color="inherit"
+                fullWidth
+                onClick={() => addProductCart(productId, itemInfo.quantity)}
+              >
                 Adicionar ao carrinho
               </Button>
             </Box>

@@ -9,6 +9,7 @@ import {
   MenuList,
   Button,
   Link,
+  Badge,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
@@ -33,6 +34,8 @@ const MainNav = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const userId = user && user.id;
+  const cartItemsCount =
+    user && user.cart_items_count ? user.cart_items_count : 0;
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -176,7 +179,9 @@ const MainNav = () => {
               }}
               onClick={() => navigate("/carrinho")}
             >
-              <ShoppingCartIcon />
+              <Badge color="error" badgeContent={cartItemsCount}>
+                <ShoppingCartIcon />
+              </Badge>
             </IconButton>
           </Box>
           <Box
