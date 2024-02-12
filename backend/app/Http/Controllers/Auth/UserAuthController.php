@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Passport\Token;
@@ -52,6 +53,12 @@ class UserAuthController extends Controller
                 'email' => $user->email,
                 'token' => $token
             ];
+
+            $cart = Cart::firstOrCreate(['user_id' => $user['id']])->withCount('cart_items')->toSql();
+            $user['cart'] = $cart;
+
+            $user['cart_items_count'] = isset($cart, $cart->cart_items_count) ? $cart->cart_items_count : 0;
+
             return response()->json($user);
         } else {
             return response(['error_message' => 'Incorrect Details. 
@@ -82,6 +89,10 @@ class UserAuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
             ];
+
+            $cart = Cart::firstOrCreate(['user_id' => $user])->withCount('cart_items')->first();
+            $user['cart_items_count'] = isset($cart, $cart->cart_items_count) ? $cart->cart_items_count : 0;
+
             return response()->json($user, 200);
             
         }

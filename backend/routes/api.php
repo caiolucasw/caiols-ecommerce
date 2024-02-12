@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -28,7 +29,10 @@ Route::get('products/{id}', [ProductController::class, 'findById']);
 Route::get('categories/products_count', [CategoryController::class, 'getCategoriesProductsCount']);
 Route::get('brands/products_count', [BrandController::class, 'getBrandsProductsCount']);
 
+
 Route::middleware('auth:api')->group(function() {
     Route::delete('/logout', [UserAuthController::class, 'logout']);
     Route::get('/user', [UserAuthController::class, 'getUserBasicInfo']);
+    Route::get('/cart', [CartController::class, 'get']); // put this into auth:api routes afterwards
+    Route::post('/cart/products', [CartController::class, 'insertItem']);
 });
