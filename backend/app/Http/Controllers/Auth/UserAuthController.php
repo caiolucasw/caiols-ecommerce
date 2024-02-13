@@ -53,11 +53,9 @@ class UserAuthController extends Controller
                 'email' => $user->email,
                 'token' => $token
             ];
+            $cart = Cart::firstOrCreate(['user_id' => $user])->withSum('cart_items', 'quantity')->first();
 
-            $cart = Cart::firstOrCreate(['user_id' => $user['id']])->withCount('cart_items')->toSql();
-            $user['cart'] = $cart;
-
-            $user['cart_items_count'] = isset($cart, $cart->cart_items_count) ? $cart->cart_items_count : 0;
+            $user['cart_items_count'] = isset($cart, $cart->cart_items_sum_quantity) ? $cart->cart_items_sum_quantity : 0;
 
             return response()->json($user);
         } else {
@@ -90,8 +88,9 @@ class UserAuthController extends Controller
                 'email' => $user->email,
             ];
 
-            $cart = Cart::firstOrCreate(['user_id' => $user])->withCount('cart_items')->first();
-            $user['cart_items_count'] = isset($cart, $cart->cart_items_count) ? $cart->cart_items_count : 0;
+            $cart = Cart::firstOrCreate(['user_id' => $user])->withSum('cart_items', 'quantity')->first();
+
+            $user['cart_items_count'] = isset($cart, $cart->cart_items_sum_quantity) ? $cart->cart_items_sum_quantity : 0;
 
             return response()->json($user, 200);
             
