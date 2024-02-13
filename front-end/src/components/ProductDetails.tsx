@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import ImageList from "./ImageList";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosApp from "../customAxios";
 import { ProductInterface } from "../utils/types";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { updateCartCount } from "../app/userSlice";
@@ -33,9 +33,7 @@ const ProductDetails = () => {
 
   const getProductById = async (id: string) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/products/${id}`
-      );
+      const response = await axiosApp.get(`/products/${id}`);
       if (response.status === 200 && response.data) {
         setProduct(response.data);
       }
@@ -47,26 +45,19 @@ const ProductDetails = () => {
 
   const addProductCart = async (id: string, quantity: string) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_API_URL}/cart/products`,
-        {
-          product: id,
-          quantity,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
+      const response = await axiosApp.post("/cart/products", {
+        product: id,
+        quantity,
+      });
       if (response.status === 200 && response.data) {
-        setProduct(response.data);
-        dispatch(updateCartCount(Number(quantity)));
+        let cartItemCount = response.data.cart_items_count;
+        cartItemCount = cartItemCount
+          ? typeof cartItemCount === "string"
+            ? Number(cartItemCount)
+            : 0
+          : 0;
+        dispatch(updateCartCount(cartItemCount));
       }
-
-      console.log(response);
     } catch (err) {
       console.log(err);
     }

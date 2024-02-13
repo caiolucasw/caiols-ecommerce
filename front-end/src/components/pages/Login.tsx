@@ -3,7 +3,7 @@ import { Link as RouteLink, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import axios from "axios";
+import axiosApp from "../../customAxios";
 import { useEffect, useState } from "react";
 import { setUser } from "../../app/userSlice";
 
@@ -17,15 +17,7 @@ const Login = () => {
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       setLoading(true);
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_API_URL}/login`,
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await axiosApp.post("/login", values);
 
       if (res && res.status === 200) {
         dispatch(setUser(res.data));

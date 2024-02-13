@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosApp from "../../customAxios";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { Cart, CartItem as CartItemInterface } from "../../utils/types";
 import CartItem from "../cart/CartItem";
@@ -18,13 +18,7 @@ const CartPage = () => {
   const getCartItems = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/cart`, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const res = await axiosApp.get("/cart");
 
       if (res && res.status === 200) {
         setCart(res.data);
@@ -49,7 +43,11 @@ const CartPage = () => {
     );
   };
 
-  const updateItemQuantityState = (itemId: number, quantity: number) => {
+  const updateItemQuantityState = (
+    itemId: number,
+    quantity: number,
+    totalQuantity: number
+  ) => {
     if (!cart || !cartItems) return;
 
     const cartItemsAux = [...cartItems];
@@ -70,7 +68,7 @@ const CartPage = () => {
       }
     });
 
-    dispatch(updateCartCount(quantity));
+    dispatch(updateCartCount(totalQuantity));
   };
 
   const updateQuantityProductCart = async (
@@ -79,26 +77,20 @@ const CartPage = () => {
     cartItemId: number
   ) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_API_URL}/cart/products`,
-        {
-          product: productId,
-          quantity,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      console.log(quantity);
-      if (response.status === 200 && response.data) {
-        updateItemQuantityState(cartItemId, quantity);
-      }
+      const response = await axiosApp.post("/cart/products", {
+        product: productId,
+        quantity,
+      });
 
-      console.log(response);
+      if (response.status === 200 && response.data) {
+        let cartItemCount = response.data.cart_items_count;
+        cartItemCount = cartItemCount
+          ? typeof cartItemCount === "string"
+            ? Number(cartItemCount)
+            : 0
+          : 0;
+        updateItemQuantityState(cartItemId, quantity, cartItemCount);
+      }
     } catch (err) {
       console.log(err);
     }

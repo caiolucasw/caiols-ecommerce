@@ -13,7 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { fetchProducts } from "../app/searchProductsSlice";
 import { RootState, useAppDispatch, useAppSelector } from "../app/store";
-import axios from "axios";
+import axiosApp from "../customAxios";
 import FilterListIcon from "@mui/icons-material/FilterListOutlined";
 import {
   BrandProductsCountInterface,
@@ -152,9 +152,7 @@ const ProductFilters = () => {
 
   const getFilters = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/products/filters`
-      );
+      const res = await axiosApp.get("/products/filters");
 
       if (res.status === 200 && res.data) {
         setCategories(res.data?.categories || []);

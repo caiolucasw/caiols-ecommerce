@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosApp from "../customAxios";
 import { formatQueryParams } from "../utils/queryParams";
 import { FetchProductsInterface, ProductInterface } from "../utils/types";
 
@@ -25,9 +25,7 @@ export const fetchProducts = createAsyncThunk(
   async (filters: FetchProductsInterface) => {
     const qs = formatQueryParams(filters);
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/products${qs}`
-      );
+      const response = await axiosApp.get(`/products${qs}`);
       return response.data && response.data.data
         ? (response.data.data as ProductInterface[])
         : [];
@@ -38,21 +36,6 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-// export const fetchProduct = createAsyncThunk(
-//   "product/{id}",
-//   async (id: string) => {
-//     try {
-//       const response = await axios.get(
-//         `${import.meta.env.VITE_BASE_API_URL}/products/${id}`
-//       );
-//       return response.data ? (response.data as ProductInterface) : null;
-//     } catch (err) {
-//       console.log(err);
-//       return null;
-//     }
-//   }
-// );
-
 export const searchProductsSlice = createSlice({
   name: "searchProducts",
   initialState,
@@ -60,13 +43,6 @@ export const searchProductsSlice = createSlice({
     setInputNameValue: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
-
-    // addCategory: (state, action: PayloadAction<string>) => {
-    //     state.categories.push(action.payload);
-    // },
-    // removeCategory: (state, action: PayloadAction<string>) => {
-    //     state.categories = state.categories.filter((category) => category !== action.payload);
-    // }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state, action) => {
@@ -78,11 +54,6 @@ export const searchProductsSlice = createSlice({
       }
       state.loading = false;
     });
-    // builder.addCase(fetchProduct.fulfilled, (state, action) => {
-    //   if (action.payload) {
-    //     state.selectedProduct = action.payload;
-    //   }
-    // });
   },
 });
 
