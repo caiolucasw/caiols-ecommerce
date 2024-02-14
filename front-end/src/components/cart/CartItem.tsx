@@ -7,9 +7,9 @@ interface CartItemProps {
   item: CartItemInterface;
   updateQuantityProductCart: (
     productId: string,
-    quantity: string | number,
+    quantity: number,
     cartItemId: number
-  ) => undefined;
+  ) => Promise<void>;
 }
 const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
   const quantityNum =
@@ -119,6 +119,9 @@ const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
                 textDecoration: "underline",
                 ml: 1,
               })}
+              onClick={() =>
+                updateQuantityProductCart(item.product_id, 0, item.id)
+              }
             >
               Remover
             </Typography>

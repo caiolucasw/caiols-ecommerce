@@ -33,7 +33,10 @@ const CartPage = () => {
   const getTotalPrice = (
     cartItems: CartItemInterface[]
   ): number | undefined => {
-    if (!cartItems || cartItems.length <= 0) return 0;
+    if (!cartItems || cartItems.length <= 0) {
+      setTotal(0);
+      return;
+    }
 
     setTotal(
       cartItems.reduce((acc, curr) => {
@@ -50,12 +53,18 @@ const CartPage = () => {
   ) => {
     if (!cart || !cartItems) return;
 
-    const cartItemsAux = [...cartItems];
+    let cartItemsAux = [...cartItems];
 
-    const itemIndex = cartItemsAux.findIndex((item) => item.id === itemId);
-    if (itemIndex === -1) return;
+    // Remove item from cart
+    if (quantity <= 0) {
+      cartItemsAux.filter((item) => item.id !== itemId);
+    } else {
+      // Update quantity
+      const itemIndex = cartItemsAux.findIndex((item) => item.id === itemId);
+      if (itemIndex === -1) return;
 
-    cartItemsAux[itemIndex].quantity = quantity;
+      cartItemsAux[itemIndex].quantity = quantity;
+    }
 
     setCart((curr) => {
       if (curr) {
@@ -102,8 +111,8 @@ const CartPage = () => {
 
   // recalculate total
   useEffect(() => {
-    if (cart && cart.cart_items) {
-      getTotalPrice(cart.cart_items);
+    if (cart) {
+      getTotalPrice(cart.cart_items || []);
     }
   }, [cart]);
 
@@ -135,13 +144,20 @@ const CartPage = () => {
           </Box>
         ) : (
           <Box p={2} flex={1} display="flex" flexDirection="column" gap={2}>
-            {cartItems &&
+            {cartItems && cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <CartItem
                   item={item}
                   updateQuantityProductCart={updateQuantityProductCart}
                 />
-              ))}
+              ))
+            ) : (
+              <Box mt={2}>
+                <Typography variant="h6" fontWeight={700}>
+                  Não há itens em seu carrinho!
+                </Typography>
+              </Box>
+            )}
           </Box>
         )}
         <Box

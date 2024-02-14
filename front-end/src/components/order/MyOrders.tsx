@@ -64,7 +64,16 @@ const MyOrders = () => {
         </Box>
       </Box>
 
-      <Box width="100%" display="flex" flexDirection="column" gap={2}>
+      <Box
+        width="100%"
+        display="flex"
+        flexDirection="column"
+        sx={{
+          "& > .order-item:last-child": {
+            borderBottom: "1px solid #ccc !important",
+          },
+        }}
+      >
         {orders && orders.length > 0 ? (
           orders.map((order: OrderItemInterface) => (
             <OrderItem key={order.id} order={order} />

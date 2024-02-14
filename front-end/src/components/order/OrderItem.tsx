@@ -1,6 +1,6 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { Box, IconButton, Collapse, Divider } from "@mui/material";
+import { Box, IconButton, Collapse } from "@mui/material";
 import { useState } from "react";
 import OrderItemDetail from "./OrderItemDetail";
 
@@ -24,10 +24,11 @@ const OrderItem = ({ order }: OrderItemProps) => {
   const [openDetails, setOpenDetails] = useState(false);
   return (
     <Box
+      className="order-item"
       sx={{
-        border: "1px solid #ccc",
-        borderRadius: 2,
         cursor: "pointer",
+        border: "1px solid #ccc",
+        borderBottom: "none",
       }}
       onClick={() => setOpenDetails((curr) => !curr)}
     >
@@ -58,7 +59,6 @@ const OrderItem = ({ order }: OrderItemProps) => {
         </IconButton>
       </Box>
       <Collapse in={openDetails} timeout="auto" unmountOnExit>
-        <Divider sx={{ mb: 1 }} />
         <OrderItemDetail />
       </Collapse>
     </Box>
