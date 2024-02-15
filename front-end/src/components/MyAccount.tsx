@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axiosApp from "../customAxios";
 import { Formik } from "formik";
 import { User } from "../utils/types";
+import InputMask from "react-input-mask";
 
 const MyAccount = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -36,6 +37,9 @@ const MyAccount = () => {
         initialValues={{
           name: user?.name || "",
           email: user?.email || "",
+          cpf: user?.cpf || "",
+          date_birth: user?.date_birth || "",
+          phone: user?.phone || "",
         }}
         onSubmit={(values) => console.log(values)}
       >
@@ -55,8 +59,12 @@ const MyAccount = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  name="phone"
                   variant="outlined"
                   label="Telefone celular"
+                  value={values.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                   fullWidth
                 />
               </Grid>
@@ -71,15 +79,40 @@ const MyAccount = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField variant="outlined" label="CPF" disabled fullWidth />
+                <InputMask
+                  name="cpf"
+                  mask="999.999.999-99"
+                  value={values.cpf}
+                  disabled
+                >
+                  {(inputProps: any) => (
+                    <TextField
+                      label="CPF"
+                      variant="outlined"
+                      fullWidth
+                      {...inputProps}
+                      disabled
+                    />
+                  )}
+                </InputMask>
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  label="Data de Nascimento"
+                <InputMask
+                  name="date_birth"
+                  mask="99/99/9999"
+                  value={values.date_birth}
                   disabled
-                  fullWidth
-                />
+                >
+                  {(inputProps: any) => (
+                    <TextField
+                      label="Data de Nascimento"
+                      variant="outlined"
+                      fullWidth
+                      {...inputProps}
+                      disabled
+                    />
+                  )}
+                </InputMask>
               </Grid>
               <Grid item xs={12} display="flex" justifyContent="end">
                 <Button variant="contained" color="primary">

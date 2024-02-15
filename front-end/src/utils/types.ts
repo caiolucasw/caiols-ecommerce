@@ -70,10 +70,10 @@ export interface Cart {
 }
 
 export interface User {
-  id: number;
+  id?: number;
   name: string;
-  created_at: string;
   email: string;
-  email_verified_at: string;
-  updated_at: string;
+  cpf: string;
+  phone: string;
+  date_birth: string;
 }
