@@ -68,3 +68,12 @@ export interface Cart {
   updated_at: string | null;
   cart_items: CartItem[];
 }
+
+export interface User {
+  id: number;
+  name: string;
+  created_at: string;
+  email: string;
+  email_verified_at: string;
+  updated_at: string;
+}

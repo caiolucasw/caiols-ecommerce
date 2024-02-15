@@ -5,6 +5,8 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import MyAccount from "../MyAccount";
 import MyOrders from "../order/MyOrders";
 import { useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/store";
+import { logout } from "../../app/userSlice";
 
 const tabs = [
   {
@@ -31,10 +33,8 @@ const tabs = [
 const MyAccountPage = () => {
   const [currentTab, setCurrentTab] = useState("account");
   const { search } = useLocation();
-
-  const logout = () => {
-    console.log("log out");
-  };
+  const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(search);
@@ -98,6 +98,7 @@ const MyAccountPage = () => {
                   borderRadius: 999,
                   fontWeight: 700,
                 }}
+                onClick={() => dispatch(logout(user))}
               >
                 Sair
               </Button>
