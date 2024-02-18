@@ -5,9 +5,10 @@ import { Outlet, useNavigate } from "react-router-dom";
 const ProtectedRoute = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!user.token) {
+    if (!token) {
       navigate("/login");
     }
   }, [user]);

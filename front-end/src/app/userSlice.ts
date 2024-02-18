@@ -88,6 +88,13 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getUser.pending, (state, action) => {
+      if (state) {
+        state = { ...state, loading: true };
+      }
+
+      return state;
+    });
     builder.addCase(getUser.fulfilled, (state, action) => {
       if (action.payload) {
         const token = localStorage.getItem("token");
@@ -95,6 +102,14 @@ export const userSlice = createSlice({
         return state;
       } else {
         localStorage.removeItem("token");
+        state = { ...state, loading: false };
+      }
+
+      return state;
+    });
+    builder.addCase(getUser.rejected, (state, action) => {
+      if (state) {
+        state = { ...state, loading: true };
       }
 
       return state;
