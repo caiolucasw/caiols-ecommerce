@@ -1,4 +1,10 @@
-import { Box, CircularProgress, Divider, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useEffect, useState } from "react";
 import axiosApp from "../../customAxios";
@@ -6,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import { Cart, CartItem as CartItemInterface } from "../../utils/types";
 import CartItem from "../cart/CartItem";
 import { updateCartCount } from "../../app/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const [cart, setCart] = useState<Cart | null>(null);
@@ -14,6 +21,7 @@ const CartPage = () => {
   const cartItems = cart?.cart_items || null;
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const getCartItems = async () => {
     setLoading(true);
@@ -190,21 +198,29 @@ const CartPage = () => {
                 <CircularProgress size={50} />
               </Box>
             ) : (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Typography variant="h6" fontWeight={500}>
-                  Total:
-                </Typography>
-                <Typography variant="subtitle1" fontWeight={700}>
-                  {"R$ "}
-                  {total.toLocaleString("pt-BR", {
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2,
-                  })}
-                </Typography>
+              <Box display="flex" gap={3} flexDirection="column">
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography variant="h6" fontWeight={500}>
+                    Total:
+                  </Typography>
+                  <Typography variant="subtitle1" fontWeight={700}>
+                    {"R$ "}
+                    {total.toLocaleString("pt-BR", {
+                      maximumFractionDigits: 2,
+                      minimumFractionDigits: 2,
+                    })}
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  onClick={() => navigate("/checkout")}
+                >
+                  Comprar
+                </Button>
               </Box>
             )}
           </Box>

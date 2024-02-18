@@ -132,7 +132,12 @@ const ProductDetails = () => {
           </TextField>
           <Box>
             <Box my={2}>
-              <Button variant="contained" color="primary" fullWidth>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={() => navigate("/pagamento")}
+              >
                 Comprar
               </Button>
             </Box>

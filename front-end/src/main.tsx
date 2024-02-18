@@ -23,6 +23,8 @@ import Login from "./components/pages/Login.tsx";
 import Signup from "./components/pages/Signup.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import CartPage from "./components/pages/CartPage.tsx";
+import PaymentPage from "./components/stripe/PaymentPage.tsx";
+import CheckoutPage from "./components/pages/CheckoutPage.tsx";
 
 const theme = createTheme({
   palette: {
@@ -53,6 +55,15 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Signup />,
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/checkout",
+            element: <CheckoutPage />,
+          },
+        ],
       },
       {
         element: <MainLayout />,
@@ -95,6 +106,14 @@ const router = createBrowserRouter([
               {
                 path: "/meus-pedidos",
                 element: <Navigate to="/minha-conta?tab=orders" />,
+              },
+              {
+                path: "/pagamento",
+                element: <PaymentPage />,
+              },
+              {
+                path: "/checkout",
+                element: <CheckoutPage />,
               },
             ],
           },
