@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
@@ -7,7 +8,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,6 +35,8 @@ Route::get('brands/products_count', [BrandController::class, 'getBrandsProductsC
 Route::middleware('auth:api')->group(function() {
     Route::delete('/logout', [UserAuthController::class, 'logout']);
     Route::get('/user', [UserAuthController::class, 'getUserBasicInfo']);
+    Route::get('/address', [AddressController::class, 'getUserAddress']);
+    Route::post('/address', [AddressController::class, 'createUserAddress']);
     Route::get('/user-details', [UserController::class, 'getUserDetails']);
     Route::get('/cart', [CartController::class, 'get']); // put this into auth:api routes afterwards
     Route::post('/cart/products', [CartController::class, 'insertItem']);
