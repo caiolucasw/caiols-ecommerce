@@ -20,5 +20,9 @@ class Address extends Model
         'state',
         'user_id',
     ];
+
+    protected $hidden = [
+        'user_id',
+    ];
     
 }

@@ -2,11 +2,12 @@ import { Box, Button, Grid, SvgIcon, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import MyAccount from "../MyAccount";
+import AccountInfo from "../AccountInfo";
 import MyOrders from "../order/MyOrders";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { logout } from "../../app/userSlice";
+import MyAccount from "../MyAccount";
 
 const tabs = [
   {
@@ -106,11 +107,7 @@ const MyAccountPage = () => {
           </Box>
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
-          {currentTab === "account" && (
-            <Box>
-              <MyAccount />
-            </Box>
-          )}
+          {currentTab === "account" && <MyAccount />}
           {currentTab === "orders" && (
             <Box>
               <MyOrders />

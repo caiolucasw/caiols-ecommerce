@@ -77,3 +77,15 @@ export interface User {
   phone: string;
   date_birth: string;
 }
+
+export interface Address {
+  id: number;
+  person_name: string;
+  last_name?: string;
+  zip_code: string;
+  street: string;
+  number: string;
+  district: string;
+  city: string;
+  state: string;
+}
