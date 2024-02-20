@@ -13,30 +13,31 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PaymentPage from "../stripe/PaymentPage";
+import CartCheckout from "../checkout/CartCheckout";
+import FormAddressCheckout from "../checkout/FormAddressCheckout";
+import axiosApp from "../../customAxios";
+import { useAppDispatch, useAppSelector } from "../../app/store";
+import { Cart, CartItem as CartItemInterface } from "../../utils/types";
+import { updateCartCount } from "../../app/userSlice";
 
 const steps = [
   {
     id: 0,
-    label: "Endereço de Entrega",
-    value: "address",
+    label: "Carrinho",
+    value: "cart-checkout",
   },
   {
     id: 1,
-    label: "Itens",
-    value: "itens",
+    label: "Entrega",
+    value: "address",
   },
   {
     id: 2,
-    label: "Forma de pagamento",
+    label: "Pagamento",
     value: "payment",
-  },
-  {
-    id: 3,
-    label: "Concluído",
-    value: "done",
   },
 ];
 
@@ -50,6 +51,12 @@ const CheckoutPage = () => {
     [k: number]: boolean;
   }>({});
   const [loading, setLoading] = useState(false);
+
+  const [cart, setCart] = useState<Cart | null>(null);
+  const [total, setTotal] = useState(0);
+  const cartItems = cart?.cart_items || null;
+  const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const totalSteps = () => {
     return steps.length;
@@ -96,6 +103,107 @@ const CheckoutPage = () => {
     setActiveStep(0);
     setCompleted({});
   };
+
+  const getCartItems = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosApp.get("/cart");
+
+      if (res && res.status === 200) {
+        setCart(res.data);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  const getTotalPrice = (
+    cartItems: CartItemInterface[]
+  ): number | undefined => {
+    if (!cartItems || cartItems.length <= 0) {
+      setTotal(0);
+      return;
+    }
+
+    setTotal(
+      cartItems.reduce((acc, curr) => {
+        acc += curr.quantity * curr.product.price;
+        return acc;
+      }, 0)
+    );
+  };
+
+  const updateItemQuantityState = (
+    itemId: number,
+    quantity: number,
+    totalQuantity: number
+  ) => {
+    if (!cart || !cartItems) return;
+
+    let cartItemsAux = [...cartItems];
+
+    // Remove item from cart
+    if (quantity <= 0) {
+      cartItemsAux.filter((item) => item.id !== itemId);
+    } else {
+      // Update quantity
+      const itemIndex = cartItemsAux.findIndex((item) => item.id === itemId);
+      if (itemIndex === -1) return;
+
+      cartItemsAux[itemIndex].quantity = quantity;
+    }
+
+    setCart((curr) => {
+      if (curr) {
+        return {
+          ...curr,
+          cart_items: cartItemsAux,
+        };
+      } else {
+        return null;
+      }
+    });
+
+    dispatch(updateCartCount(totalQuantity));
+  };
+
+  const updateQuantityProductCart = async (
+    productId: string,
+    quantity: number,
+    cartItemId: number
+  ) => {
+    try {
+      const response = await axiosApp.post("/cart/products", {
+        product: productId,
+        quantity,
+      });
+
+      if (response.status === 200 && response.data) {
+        let cartItemCount = response.data.cart_items_count;
+        cartItemCount = cartItemCount
+          ? typeof cartItemCount === "string"
+            ? Number(cartItemCount)
+            : 0
+          : 0;
+        updateItemQuantityState(cartItemId, quantity, cartItemCount);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (user.token) getCartItems();
+  }, [user]);
+
+  // recalculate total
+  useEffect(() => {
+    if (cart) {
+      getTotalPrice(cart.cart_items || []);
+    }
+  }, [cart]);
 
   return (
     <Container
@@ -145,7 +253,15 @@ const CheckoutPage = () => {
           }}
         >
           {steps.map((step) => (
-            <Step key={step.id} completed={completed[step.id]}>
+            <Step
+              key={step.id}
+              completed={completed[step.id]}
+              sx={{
+                "& .MuiStepLabel-alternativeLabel": {
+                  fontWeight: 700,
+                },
+              }}
+            >
               <StepButton color="inherit">{step.label}</StepButton>
             </Step>
           ))}
@@ -195,7 +311,13 @@ const CheckoutPage = () => {
                   timeout="auto"
                   unmountOnExit
                 >
-                  {activeValue.value === "address" && <Box>Testando</Box>}
+                  {activeValue.value === "cart-checkout" && (
+                    <CartCheckout
+                      cartItems={cartItems}
+                      updateQuantityProductCart={updateQuantityProductCart}
+                    />
+                  )}
+                  {activeValue.value === "address" && <FormAddressCheckout />}
                   {activeValue.value === "payment" && <PaymentPage />}
                 </Collapse>
               </Box>

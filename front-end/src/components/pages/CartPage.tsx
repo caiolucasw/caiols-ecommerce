@@ -10,9 +10,9 @@ import { useEffect, useState } from "react";
 import axiosApp from "../../customAxios";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { Cart, CartItem as CartItemInterface } from "../../utils/types";
-import CartItem from "../cart/CartItem";
 import { updateCartCount } from "../../app/userSlice";
 import { useNavigate } from "react-router-dom";
+import CartList from "../cart/CartList";
 
 const CartPage = () => {
   const [cart, setCart] = useState<Cart | null>(null);
@@ -151,22 +151,10 @@ const CartPage = () => {
             <CircularProgress size={60} />
           </Box>
         ) : (
-          <Box p={2} flex={1} display="flex" flexDirection="column" gap={2}>
-            {cartItems && cartItems.length > 0 ? (
-              cartItems.map((item) => (
-                <CartItem
-                  item={item}
-                  updateQuantityProductCart={updateQuantityProductCart}
-                />
-              ))
-            ) : (
-              <Box mt={2}>
-                <Typography variant="h6" fontWeight={700}>
-                  Não há itens em seu carrinho!
-                </Typography>
-              </Box>
-            )}
-          </Box>
+          <CartList
+            cartItems={cartItems}
+            updateQuantityProductCart={updateQuantityProductCart}
+          />
         )}
         <Box
           sx={{
