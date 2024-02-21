@@ -2,8 +2,20 @@ import { Box, Divider, Typography } from "@mui/material";
 import { Address } from "../utils/types";
 import PlaceIcon from "@mui/icons-material/Place";
 import EditIcon from "@mui/icons-material/Edit";
+import { SetStateAction } from "react";
 
-const AddressItem = ({ address }: { address: Address }) => {
+type modalType = "add" | "update" | "";
+interface AddressItemInterface {
+  address: Address;
+  setOpenModal: React.Dispatch<SetStateAction<modalType>>;
+  setAddressSelected: React.Dispatch<SetStateAction<Address | null>>;
+}
+
+const AddressItem = ({
+  address,
+  setOpenModal,
+  setAddressSelected,
+}: AddressItemInterface) => {
   return (
     <Box>
       <Box display="flex" gap={4} alignItems="center">
@@ -38,7 +50,11 @@ const AddressItem = ({ address }: { address: Address }) => {
               <EditIcon sx={{ width: 18, height: 18 }} />
               <Typography
                 variant="inherit"
-                sx={{ textDecoration: "underline" }}
+                sx={{ textDecoration: "underline", cursor: "pointer" }}
+                onClick={() => {
+                  setAddressSelected(address);
+                  setOpenModal("update");
+                }}
               >
                 Editar endereço
               </Typography>
