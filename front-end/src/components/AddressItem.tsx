@@ -4,7 +4,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import EditIcon from "@mui/icons-material/Edit";
 import { SetStateAction } from "react";
 
-type modalType = "add" | "update" | "";
+type modalType = "add" | "update" | "remove" | "";
 interface AddressItemInterface {
   address: Address;
   setOpenModal: React.Dispatch<SetStateAction<modalType>>;
@@ -68,6 +68,10 @@ const AddressItem = ({
               color: theme.palette.error.main,
               textDecoration: "underline",
             })}
+            onClick={() => {
+              setAddressSelected(address);
+              setOpenModal("remove");
+            }}
           >
             Excluir
           </Typography>

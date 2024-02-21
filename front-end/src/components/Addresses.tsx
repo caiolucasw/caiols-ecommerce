@@ -4,6 +4,7 @@ import axiosApp from "../customAxios";
 import AddressItem from "./AddressItem";
 import { Address } from "../utils/types";
 import ModalAddress from "./ModalAddress";
+import ModalRemove from "./utils/ModalRemove";
 
 const customAddress = {
   id: -1,
@@ -19,7 +20,9 @@ const customAddress = {
 
 const Addresses = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [openModal, setOpenModal] = useState<"add" | "update" | "">("");
+  const [openModal, setOpenModal] = useState<"add" | "update" | "remove" | "">(
+    ""
+  );
   const [addressSelected, setAddressSelected] = useState<Address | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -83,6 +86,15 @@ const Addresses = () => {
           onClose={setOpenModal}
           type={openModal}
           address={addressSelected}
+        />
+      )}
+      {openModal === "remove" && addressSelected && (
+        <ModalRemove
+          title="Remover"
+          message="Deseja remover este telefone?"
+          item={addressSelected}
+          onRemove={() => console.log("remove")}
+          onClose={() => setOpenModal("")}
         />
       )}
     </Box>

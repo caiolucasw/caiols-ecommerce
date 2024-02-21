@@ -10,7 +10,7 @@ import FormAddressCheckout from "./checkout/FormAddressCheckout";
 import { SetStateAction } from "react";
 import { Address } from "../utils/types";
 
-type modalType = "add" | "update" | "";
+type modalType = "add" | "update" | "remove" | "";
 interface ModalAddressInterface {
   type: modalType;
   onClose: React.Dispatch<SetStateAction<modalType>>;
