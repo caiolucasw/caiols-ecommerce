@@ -67,6 +67,7 @@ const AddressItem = ({
             sx={(theme) => ({
               color: theme.palette.error.main,
               textDecoration: "underline",
+              cursor: "pointer",
             })}
             onClick={() => {
               setAddressSelected(address);

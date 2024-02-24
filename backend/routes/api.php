@@ -37,6 +37,8 @@ Route::middleware('auth:api')->group(function() {
     Route::get('/user', [UserAuthController::class, 'getUserBasicInfo']);
     Route::get('/address', [AddressController::class, 'getUserAddress']);
     Route::post('/address', [AddressController::class, 'createUserAddress']);
+    Route::put('/address/{id}', [AddressController::class, 'updateUserAddress']);
+    Route::delete('/address/{id}', [AddressController::class, 'deleteUserAddress']);
     Route::get('/user-details', [UserController::class, 'getUserDetails']);
     Route::get('/cart', [CartController::class, 'get']); // put this into auth:api routes afterwards
     Route::post('/cart/products', [CartController::class, 'insertItem']);

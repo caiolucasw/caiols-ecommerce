@@ -15,7 +15,6 @@ interface ModalRemoveProps {
   message: string;
   onRemove: any;
   onClose: any;
-  item: any;
 }
 
 const ModalRemove = ({

@@ -40,6 +40,21 @@ const Addresses = () => {
     }
   };
 
+  const removeAddress = async (addressId: number) => {
+    setLoading("removeAddresses");
+    try {
+      const res = await axiosApp.delete(`/address/${addressId}`);
+      if (res?.status === 200 && res?.data) {
+        getAddress();
+        setOpenModal("");
+      }
+      setLoading(null);
+    } catch (err) {
+      console.log(err);
+      setLoading(null);
+    }
+  };
+
   useEffect(() => {
     getAddress();
   }, []);
@@ -83,7 +98,10 @@ const Addresses = () => {
       </Box>
       {(openModal === "add" || openModal === "update") && addressSelected && (
         <ModalAddress
-          onClose={setOpenModal}
+          onClose={() => {
+            setOpenModal("");
+            getAddress();
+          }}
           type={openModal}
           address={addressSelected}
         />
@@ -92,9 +110,11 @@ const Addresses = () => {
         <ModalRemove
           title="Remover"
           message="Deseja remover este telefone?"
-          item={addressSelected}
-          onRemove={() => console.log("remove")}
-          onClose={() => setOpenModal("")}
+          onRemove={() => removeAddress(addressSelected.id)}
+          onClose={() => {
+            setOpenModal("");
+            getAddress();
+          }}
         />
       )}
     </Box>

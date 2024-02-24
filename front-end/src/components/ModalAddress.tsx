@@ -7,19 +7,18 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import FormAddressCheckout from "./checkout/FormAddressCheckout";
-import { SetStateAction } from "react";
 import { Address } from "../utils/types";
 
 type modalType = "add" | "update" | "remove" | "";
 interface ModalAddressInterface {
   type: modalType;
-  onClose: React.Dispatch<SetStateAction<modalType>>;
+  onClose: () => undefined;
   address: Address;
 }
 
 const ModalAddress = ({ type, onClose, address }: ModalAddressInterface) => {
   return (
-    <Dialog open onClose={() => onClose("")}>
+    <Dialog open onClose={() => onClose()}>
       <DialogTitle
         sx={{
           position: "relative",
@@ -32,14 +31,14 @@ const ModalAddress = ({ type, onClose, address }: ModalAddressInterface) => {
             right: 5,
             top: 10,
           }}
-          onClick={() => onClose("")}
+          onClick={() => onClose()}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <Divider />
       <DialogContent>
-        <FormAddressCheckout address={address} />
+        <FormAddressCheckout address={address} type={type} onClose={onClose} />
       </DialogContent>
     </Dialog>
   );

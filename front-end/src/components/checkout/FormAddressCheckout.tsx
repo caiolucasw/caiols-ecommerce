@@ -5,10 +5,21 @@ import * as Yup from "yup";
 import { Address } from "../../utils/types";
 // @ts-ignore
 import InputMask from "react-input-mask";
+import axiosApp from "../../customAxios";
 
 const requiredMessage = "Este campo é obrigatório";
 
-const FormAddressCheckout = ({ address }: { address: Address }) => {
+interface FormAddressCheckoutProps {
+  address: Address;
+  type: "add" | "update" | "remove" | "";
+  onClose?: () => undefined;
+}
+
+const FormAddressCheckout = ({
+  address,
+  type,
+  onClose,
+}: FormAddressCheckoutProps) => {
   const initialAddress = address;
   const getCep = async (cep: string) => {
     try {
@@ -22,6 +33,37 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
     }
   };
 
+  const updateAddress = async (id: number | null, values: Address) => {
+    if (!id) return;
+    try {
+      const res = await axiosApp.put(`/address/${id}`, {
+        ...values,
+        zip_code: values.zip_code.replace(/[^0-9]/g, ""),
+      });
+      if (res.status === 200) {
+        if (onClose) onClose();
+        console.log("successo");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addAddress = async (values: Address) => {
+    try {
+      const res = await axiosApp.post("/address", {
+        ...values,
+        zip_code: values.zip_code.replace(/[^0-9]/g, ""),
+      });
+      if (res.status === 200) {
+        if (onClose) onClose();
+        console.log("successo");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box>
       <Formik
@@ -31,15 +73,31 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
           last_name: Yup.string().max(255),
           zip_code: Yup.string()
             .required(requiredMessage)
-            .max(9, "Campo inválido")
-            .min(9, "Campo inválido"),
+            .test({
+              name: "zip-code-valid",
+              skipAbsent: true,
+              test(value, ctx) {
+                const zip = value.replace(/[^0-9]/g, "");
+                if (zip.length !== 8) {
+                  return ctx.createError({ message: "CEP inválido!" });
+                }
+
+                return true;
+              },
+            }),
           street: Yup.string().required(requiredMessage).max(255),
           number: Yup.string().required(requiredMessage).max(20),
           district: Yup.string().required(requiredMessage).max(255),
           state: Yup.string().required(requiredMessage).max(2),
           city: Yup.string().required(requiredMessage).max(255),
         })}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => {
+          if (type === "add") {
+            addAddress(values);
+          } else if (type === "update") {
+            updateAddress(address?.id, values);
+          }
+        }}
       >
         {({
           handleSubmit,
@@ -52,7 +110,8 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
           setFieldError,
         }) => {
           const disableAddressFields =
-            (errors.zip_code && touched.zip_code) || values.zip_code.length < 9
+            (errors.zip_code && touched.zip_code) ||
+            values.zip_code?.replace(/[^0-9]/g, "")?.length !== 8
               ? true
               : false;
           return (
@@ -60,7 +119,7 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <TextField
-                    name="name"
+                    name="person_name"
                     variant="outlined"
                     label="Nome"
                     value={values.person_name}
@@ -74,7 +133,7 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
-                    name="lastName"
+                    name="last_name"
                     variant="outlined"
                     label="Sobrenome"
                     value={values.last_name}
@@ -96,14 +155,13 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
                     <Grid item xs={6} display="flex" alignItems="center">
                       <InputMask
                         mask="99999-999"
-                        name="zipCode"
+                        name="zip_code"
                         value={values.zip_code}
                         onChange={async (e) => {
                           handleChange(e);
                           const cep = e.target.value
                             .trim()
                             .replace(/[^0-9]/g, "");
-                          console.log(e.target.value);
                           if (cep.length === 8) {
                             const res = await getCep(cep);
                             if (res && !res.error) {
@@ -125,6 +183,7 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
                       >
                         {(inputProps: any) => (
                           <TextField
+                            name="zip_code"
                             variant="outlined"
                             label="CEP"
                             helperText={touched.zip_code && errors.zip_code}
@@ -160,7 +219,7 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
                     error={touched.street && Boolean(errors.street)}
                     fullWidth
                     size="small"
-                    disabled={disableAddressFields}
+                    disabled
                   />
                 </Grid>{" "}
                 <Grid item xs={12} md={6}>
@@ -190,7 +249,7 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
                     error={touched.district && Boolean(errors.district)}
                     fullWidth
                     size="small"
-                    disabled={disableAddressFields}
+                    disabled
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -205,7 +264,7 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
                     error={touched.state && Boolean(errors.state)}
                     fullWidth
                     size="small"
-                    disabled={disableAddressFields}
+                    disabled
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -220,7 +279,7 @@ const FormAddressCheckout = ({ address }: { address: Address }) => {
                     error={touched.city && Boolean(errors.city)}
                     fullWidth
                     size="small"
-                    disabled={disableAddressFields}
+                    disabled
                   />
                 </Grid>
                 <Grid
