@@ -17,11 +17,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PaymentPage from "../stripe/PaymentPage";
 import CartCheckout from "../checkout/CartCheckout";
-import FormAddressCheckout from "../checkout/FormAddressCheckout";
 import axiosApp from "../../customAxios";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { Cart, CartItem as CartItemInterface } from "../../utils/types";
 import { updateCartCount } from "../../app/userSlice";
+import CartAddresses from "../checkout/CartAddresses";
 
 const steps = [
   {
@@ -317,7 +317,7 @@ const CheckoutPage = () => {
                       updateQuantityProductCart={updateQuantityProductCart}
                     />
                   )}
-                  {activeValue.value === "address" && <FormAddressCheckout />}
+                  {activeValue.value === "address" && <CartAddresses />}
                   {activeValue.value === "payment" && <PaymentPage />}
                 </Collapse>
               </Box>
@@ -338,22 +338,21 @@ const CheckoutPage = () => {
                   borderRadius: 2,
                 }}
               >
-                {activeStep !== steps.length - 1 && (
-                  <>
-                    <Box mb={2}>
-                      <Button
-                        variant="contained"
-                        onClick={() => handleNext()}
-                        fullWidth
-                      >
-                        {activeStep === steps.length - 2
-                          ? "Finalizar"
-                          : "Próximo"}
-                      </Button>
-                    </Box>
-                    <Divider sx={{ my: 2 }} />
-                  </>
-                )}
+                <>
+                  <Box mb={2}>
+                    <Button
+                      variant="contained"
+                      onClick={() => handleNext()}
+                      fullWidth
+                    >
+                      {activeStep === steps.length - 1
+                        ? "Finalizar"
+                        : "Próximo"}
+                    </Button>
+                  </Box>
+                  <Divider sx={{ my: 2 }} />
+                </>
+
                 <Typography variant="subtitle1" fontWeight={700}>
                   Resumo da Compra
                 </Typography>
@@ -387,12 +386,6 @@ const CheckoutPage = () => {
                         })}
                       </Typography>
                     </Box>
-                    {/* <Button
-                      variant="contained"
-                      onClick={() => navigate("/checkout")}
-                    >
-                      Comprar
-                    </Button> */}
                   </Box>
                 )}
               </Box>

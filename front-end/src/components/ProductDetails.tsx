@@ -14,6 +14,7 @@ import axiosApp from "../customAxios";
 import { ProductInterface } from "../utils/types";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { updateCartCount } from "../app/userSlice";
+import { toast } from "react-toastify";
 
 interface ItemInfoInterface {
   quantity: string;
@@ -57,6 +58,7 @@ const ProductDetails = () => {
             : 0
           : 0;
         dispatch(updateCartCount(cartItemCount));
+        toast.success("Item adicionado ao carrinho!");
       }
     } catch (err) {
       console.log(err);
@@ -146,7 +148,9 @@ const ProductDetails = () => {
                 variant="contained"
                 color="inherit"
                 fullWidth
-                onClick={() => addProductCart(productId, itemInfo.quantity)}
+                onClick={() => {
+                  addProductCart(productId, itemInfo.quantity);
+                }}
               >
                 Adicionar ao carrinho
               </Button>

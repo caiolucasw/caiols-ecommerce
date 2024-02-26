@@ -25,6 +25,8 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import CartPage from "./components/pages/CartPage.tsx";
 import PaymentPage from "./components/stripe/PaymentPage.tsx";
 import CheckoutPage from "./components/pages/CheckoutPage.tsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const theme = createTheme({
   palette: {
@@ -129,6 +131,17 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <ToastContainer
+      position="top-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <RouterProvider router={router} />

@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Close } from "@mui/icons-material";
 
 interface ModalRemoveProps {
   title: string;
@@ -55,7 +54,7 @@ const ModalRemove = ({
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" color="inherit">
+        <Button variant="contained" color="inherit" onClick={() => onClose()}>
           Cancelar
         </Button>
         <Button variant="contained" color="error" onClick={() => onRemove()}>

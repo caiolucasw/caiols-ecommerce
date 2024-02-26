@@ -6,6 +6,7 @@ import { Address } from "../../utils/types";
 // @ts-ignore
 import InputMask from "react-input-mask";
 import axiosApp from "../../customAxios";
+import { toast } from "react-toastify";
 
 const requiredMessage = "Este campo é obrigatório";
 
@@ -43,6 +44,7 @@ const FormAddressCheckout = ({
       if (res.status === 200) {
         if (onClose) onClose();
         console.log("successo");
+        toast.success("Endereço atualizado!");
       }
     } catch (err) {
       console.log(err);
@@ -57,6 +59,7 @@ const FormAddressCheckout = ({
       });
       if (res.status === 200) {
         if (onClose) onClose();
+        toast.success("Endereço adicionado!");
         console.log("successo");
       }
     } catch (err) {
