@@ -41,8 +41,6 @@ const steps = [
   },
 ];
 
-const total = 1500;
-
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
@@ -315,81 +313,21 @@ const CheckoutPage = () => {
                     <CartCheckout
                       cartItems={cartItems}
                       updateQuantityProductCart={updateQuantityProductCart}
+                      handleNext={handleNext}
+                      steps={steps}
+                      activeStep={activeStep}
+                      total={total}
                     />
                   )}
-                  {activeValue.value === "address" && <CartAddresses />}
-                  {activeValue.value === "payment" && <PaymentPage />}
+                  {activeValue.value === "address" && (
+                    <CartAddresses handleNext={handleNext} />
+                  )}
+                  {activeValue.value === "payment" && cart && cart.id && (
+                    <PaymentPage cartId={cart.id} />
+                  )}
                 </Collapse>
               </Box>
             ))}
-          </Box>
-          <Box>
-            <Box
-              sx={{
-                p: 2,
-                minWidth: { md: 240, lg: 350 },
-                borderRadius: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  border: "1px solid #ccc",
-                  p: 2,
-                  borderRadius: 2,
-                }}
-              >
-                <>
-                  <Box mb={2}>
-                    <Button
-                      variant="contained"
-                      onClick={() => handleNext()}
-                      fullWidth
-                    >
-                      {activeStep === steps.length - 1
-                        ? "Finalizar"
-                        : "Próximo"}
-                    </Button>
-                  </Box>
-                  <Divider sx={{ my: 2 }} />
-                </>
-
-                <Typography variant="subtitle1" fontWeight={700}>
-                  Resumo da Compra
-                </Typography>
-                <Divider sx={{ mt: 1, mb: 2 }} />
-                {loading ? (
-                  <Box
-                    p={2}
-                    flex={1}
-                    width="100%"
-                    display="flex"
-                    justifyContent="center"
-                    gap={2}
-                  >
-                    <CircularProgress size={50} />
-                  </Box>
-                ) : (
-                  <Box display="flex" gap={3} flexDirection="column">
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Typography variant="h6" fontWeight={500}>
-                        Total:
-                      </Typography>
-                      <Typography variant="subtitle1" fontWeight={700}>
-                        {"R$ "}
-                        {total.toLocaleString("pt-BR", {
-                          maximumFractionDigits: 2,
-                          minimumFractionDigits: 2,
-                        })}
-                      </Typography>
-                    </Box>
-                  </Box>
-                )}
-              </Box>
-            </Box>
           </Box>
         </Box>
       </Box>

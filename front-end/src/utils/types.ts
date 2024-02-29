@@ -89,3 +89,9 @@ export interface Address {
   city: string;
   state: string;
 }
+
+export interface Step {
+  id: number;
+  label: string;
+  value: string;
+}

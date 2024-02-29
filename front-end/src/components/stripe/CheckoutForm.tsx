@@ -5,14 +5,29 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { StripePaymentElementOptions } from "@stripe/stripe-js";
-import { Typography } from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
+import { transformNumberToCurrency } from "../../utils/usefulMethods";
+import axiosApp from "../../customAxios";
+import { redirect, useNavigate } from "react-router-dom";
 
-function CheckoutForm() {
+function CheckoutForm({ cartId }: { cartId: number }) {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
 
   const [message, setMessage] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleBuy = async () => {
+    try {
+      const res = await axiosApp.post(`/cart/buy/${cartId}`);
+      if (res && res.status === 200) {
+        navigate("/pedido-concluido");
+      }
+    } catch (err) {
+      navigate("/pedido-concluido");
+    }
+  };
 
   useEffect(() => {
     if (!stripe) {
@@ -56,33 +71,23 @@ function CheckoutForm() {
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
         return_url: "http://localhost:3000",
       },
+      redirect: "if_required",
     });
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-
-    const errorAux = error as any;
-    if (
-      errorAux?.type === "card_error" ||
-      errorAux?.type === "validation_error"
-    ) {
-      setMessage(errorAux?.message);
+    if (error) {
+      console.log("error");
+    } else if (paymentIntent && paymentIntent.status === "succeeded") {
+      handleBuy();
     } else {
-      setMessage("An unexpected error occurred.");
+      console.log("some error");
     }
-
-    setIsLoading(false);
   };
-
   const paymentElementOptions: StripePaymentElementOptions = {
     layout: "tabs",
   };
@@ -92,6 +97,16 @@ function CheckoutForm() {
       <PaymentElement id="payment-element" options={paymentElementOptions} />
 
       {/* Show any error or success messages */}
+
+      <Box my={1} display="flex" justifyContent="end">
+        <Typography
+          variant="subtitle1"
+          fontWeight={700}
+        >{`Total: R$ ${transformNumberToCurrency(150)}`}</Typography>
+      </Box>
+      <Button type="submit" variant="contained" color="primary" fullWidth>
+        Finalizar
+      </Button>
       {message && <div id="payment-message">{message}</div>}
     </form>
   );

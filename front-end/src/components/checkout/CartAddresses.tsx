@@ -29,7 +29,7 @@ const customAddress = {
   city: "",
 };
 
-const CartAddresses = () => {
+const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
   const [formType, setFormType] = useState<modalType>("");
@@ -105,13 +105,19 @@ const CartAddresses = () => {
               <Box>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="inherit"
                   onClick={() => {
                     setAddressSelected(customAddress);
                     setFormType("add");
                   }}
                 >
                   Cadastrar novo endereço
+                </Button>
+              </Box>
+
+              <Box mb={2} p={2} display="flex" justifyContent="end">
+                <Button variant="contained" onClick={() => handleNext()}>
+                  Próximo
                 </Button>
               </Box>
             </>

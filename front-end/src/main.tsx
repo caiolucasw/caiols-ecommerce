@@ -27,6 +27,7 @@ import PaymentPage from "./components/stripe/PaymentPage.tsx";
 import CheckoutPage from "./components/pages/CheckoutPage.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import OrderSuccess from "./components/order/OrderSuccess.tsx";
 
 const theme = createTheme({
   palette: {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
           {
             path: "/checkout",
             element: <CheckoutPage />,
+          },
+          {
+            path: "/pedido-concluido",
+            element: <OrderSuccess />,
           },
         ],
       },
@@ -108,10 +113,6 @@ const router = createBrowserRouter([
               {
                 path: "/meus-pedidos",
                 element: <Navigate to="/minha-conta?tab=orders" />,
-              },
-              {
-                path: "/pagamento",
-                element: <PaymentPage />,
               },
               {
                 path: "/checkout",
