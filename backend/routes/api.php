@@ -42,5 +42,6 @@ Route::middleware('auth:api')->group(function() {
     Route::get('/user-details', [UserController::class, 'getUserDetails']);
     Route::get('/cart', [CartController::class, 'get']); // put this into auth:api routes afterwards
     Route::post('/cart/products', [CartController::class, 'insertItem']);
-    Route::post('/payment-intent', [PaymentController::class, 'paymentIntent']);
+    Route::post('/payment-intent/{cart_id}', [PaymentController::class, 'paymentIntent']);
+    Route::post('/cart/buy/{id}', [CartController::class, 'buy']);
 });
