@@ -1,6 +1,8 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import OrderItem from "./OrderItem";
+import { useEffect, useState } from "react";
+import axiosApp from "../../customAxios";
 
 const orders: OrderItemInterface[] = [
   {
@@ -30,13 +32,36 @@ const orders: OrderItemInterface[] = [
   },
 ];
 
-interface OrderItemInterface {
+interface OrderItem {
   id: number;
-  status: string;
-  date: string;
+  user_id?: number;
+  status?: string;
+  updated_at?: string;
+  created_at?: string;
+  invoice_id?: string;
 }
 
 const MyOrders = () => {
+  const [orders, setOrders] = useState<OrderItem[] | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const getOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosApp.get("/orders");
+      if (res.status === 200) {
+        setOrders(res.data);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getOrders();
+  }, []);
   return (
     <Box>
       <Box display="flex" alignItems="center" gap={2} mb={4}>
@@ -46,40 +71,37 @@ const MyOrders = () => {
         </Typography>
       </Box>
 
-      <Box display="flex" justifyContent="space-between" mb={2}>
-        <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
-          <Typography variant="subtitle2" fontWeight={700}>
-            NÚMERO DO PEDIDO
-          </Typography>
-        </Box>
-        <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
-          <Typography variant="subtitle2" fontWeight={700}>
-            DATA
-          </Typography>
-        </Box>
-        <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
-          <Typography variant="subtitle2" fontWeight={700}>
-            STATUS
-          </Typography>
-        </Box>
-      </Box>
-
       <Box
         width="100%"
         display="flex"
         flexDirection="column"
         sx={{
-          "& > .order-item:last-child": {
-            borderBottom: "1px solid #ccc !important",
-          },
+          // // "& > .order-item:first-child": {
+          // //   borderTopLeftRadius: "5px",
+          // //   borderTopRightRadius: "5px",
+          // // },
+          // "& > .order-item:last-child": {
+          //   borderBottom: "1px solid #ccc !important",
+          //   borderBottomLeftRadius: "5px",
+          //   borderBottomRightRadius: "5px",
+          // },
+          gap: 1,
         }}
       >
-        {orders && orders.length > 0 ? (
-          orders.map((order: OrderItemInterface) => (
-            <OrderItem key={order.id} order={order} />
-          ))
+        {loading ? (
+          <Box display="flex" justifyContent="center" mt={4} gap={2}>
+            <CircularProgress size={50} />
+          </Box>
         ) : (
-          <Typography variant="h5">Não há nenhum pedido.</Typography>
+          <>
+            {orders && orders.length > 0 ? (
+              orders.map((order: OrderItem) => (
+                <OrderItem key={order.id} order={order} />
+              ))
+            ) : (
+              <Typography variant="h5">Não há nenhum pedido.</Typography>
+            )}
+          </>
         )}
       </Box>
     </Box>

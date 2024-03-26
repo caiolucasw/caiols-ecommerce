@@ -1,10 +1,7 @@
 import {
   Box,
-  Button,
-  CircularProgress,
   Collapse,
   Container,
-  Divider,
   IconButton,
   Step,
   StepButton,
@@ -323,7 +320,7 @@ const CheckoutPage = () => {
                     <CartAddresses handleNext={handleNext} />
                   )}
                   {activeValue.value === "payment" && cart && cart.id && (
-                    <PaymentPage cartId={cart.id} />
+                    <PaymentPage cartId={cart.id} total={total} />
                   )}
                 </Collapse>
               </Box>

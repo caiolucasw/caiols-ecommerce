@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderDetailsController;
+use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
@@ -35,13 +38,26 @@ Route::get('brands/products_count', [BrandController::class, 'getBrandsProductsC
 Route::middleware('auth:api')->group(function() {
     Route::delete('/logout', [UserAuthController::class, 'logout']);
     Route::get('/user', [UserAuthController::class, 'getUserBasicInfo']);
+    Route::get('/user-details', [UserController::class, 'getUserDetails']);
+    
+    // Address related routes
     Route::get('/address', [AddressController::class, 'getUserAddress']);
     Route::post('/address', [AddressController::class, 'createUserAddress']);
     Route::put('/address/{id}', [AddressController::class, 'updateUserAddress']);
     Route::delete('/address/{id}', [AddressController::class, 'deleteUserAddress']);
-    Route::get('/user-details', [UserController::class, 'getUserDetails']);
+    
+    
+    // cart related routes
+
     Route::get('/cart', [CartController::class, 'get']); // put this into auth:api routes afterwards
     Route::post('/cart/products', [CartController::class, 'insertItem']);
     Route::post('/payment-intent/{cart_id}', [PaymentController::class, 'paymentIntent']);
     Route::post('/cart/buy/{id}', [CartController::class, 'buy']);
+
+
+    // orders
+
+    Route::get('/orders', [OrderController::class, 'get']);
+    Route::get('/orders/{id}/details', [OrderItemController::class, 'getOrderItemsByOrderId']);
+
 });

@@ -56,7 +56,7 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
   return (
     <Box display="flex" flexDirection="column" gap={3}>
       {loading === "getAddresses" ? (
-        <Box ml={2}>
+        <Box ml={2} display="flex" justifyContent="center" alignItems="center">
           <CircularProgress size={50} />
         </Box>
       ) : (

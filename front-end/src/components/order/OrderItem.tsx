@@ -1,13 +1,18 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { Box, IconButton, Collapse } from "@mui/material";
+import { Box, IconButton, Collapse, Typography } from "@mui/material";
 import { useState } from "react";
 import OrderItemDetail from "./OrderItemDetail";
+import { formatDate } from "../../utils/formatString";
+import axiosApp from "../../customAxios";
 
 interface OrderItem {
   id: number;
-  status: string;
-  date: string;
+  user_id?: number;
+  status?: string;
+  updated_at?: string;
+  created_at?: string;
+  invoice_id?: string;
 }
 
 interface OrderItemProps {
@@ -22,16 +27,47 @@ const statusOrder: { [key: string]: string } = {
 
 const OrderItem = ({ order }: OrderItemProps) => {
   const [openDetails, setOpenDetails] = useState(false);
+
   return (
     <Box
       className="order-item"
       sx={{
         cursor: "pointer",
         border: "1px solid #ccc",
-        borderBottom: "none",
+        boxShadow: 1,
+        borderRadius: 2,
+        pt: 1,
+        px: 0.5,
       }}
       onClick={() => setOpenDetails((curr) => !curr)}
     >
+      <Box display="flex" justifyContent="space-between" position="relative">
+        <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
+          <Typography variant="subtitle2" fontWeight={700}>
+            NÚMERO DO PEDIDO
+          </Typography>
+        </Box>
+        <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
+          <Typography variant="subtitle2" fontWeight={700}>
+            DATA
+          </Typography>
+        </Box>
+        <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
+          <Typography variant="subtitle2" fontWeight={700}>
+            STATUS
+          </Typography>
+        </Box>
+        <IconButton
+          sx={{
+            position: "absolute",
+            right: 5,
+            top: "-18px",
+            transform: "translateY(20%)",
+          }}
+        >
+          {openDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
+      </Box>
       <Box
         display="flex"
         position="relative"
@@ -39,27 +75,22 @@ const OrderItem = ({ order }: OrderItemProps) => {
         py={2}
       >
         <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
-          {order.id}
+          <Typography variant="body1">{order.id} </Typography>
         </Box>
         <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
-          {order.date}
+          <Typography variant="body1">
+            {order.created_at ? formatDate(order.created_at) : ""}
+          </Typography>
         </Box>
         <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
-          {statusOrder[order.status] || ""}{" "}
+          <Typography variant="body1">
+            {" "}
+            {(order?.status && statusOrder[order?.status]) || ""}{" "}
+          </Typography>
         </Box>
-        <IconButton
-          sx={{
-            position: "absolute",
-            right: 5,
-            top: 0,
-            transform: "translateY(20%)",
-          }}
-        >
-          {openDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-        </IconButton>
       </Box>
-      <Collapse in={openDetails} timeout="auto" unmountOnExit>
-        <OrderItemDetail />
+      <Collapse in={openDetails} timeout="auto" unmountOnExit sx={{ px: 1.2 }}>
+        <OrderItemDetail order={order} />
       </Collapse>
     </Box>
   );

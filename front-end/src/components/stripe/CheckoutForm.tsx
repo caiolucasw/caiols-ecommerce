@@ -9,8 +9,9 @@ import { Button, Typography, Box } from "@mui/material";
 import { transformNumberToCurrency } from "../../utils/usefulMethods";
 import axiosApp from "../../customAxios";
 import { redirect, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-function CheckoutForm({ cartId }: { cartId: number }) {
+function CheckoutForm({ cartId, total }: { cartId: number; total: number }) {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -22,7 +23,8 @@ function CheckoutForm({ cartId }: { cartId: number }) {
     try {
       const res = await axiosApp.post(`/cart/buy/${cartId}`);
       if (res && res.status === 200) {
-        navigate("/pedido-concluido");
+        toast.success("Sua compra foi realizada com sucesso!");
+        navigate("/");
       }
     } catch (err) {
       navigate("/pedido-concluido");
@@ -102,9 +104,15 @@ function CheckoutForm({ cartId }: { cartId: number }) {
         <Typography
           variant="subtitle1"
           fontWeight={700}
-        >{`Total: R$ ${transformNumberToCurrency(150)}`}</Typography>
+        >{`Total: R$ ${transformNumberToCurrency(total)}`}</Typography>
       </Box>
-      <Button type="submit" variant="contained" color="primary" fullWidth>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        disabled={isLoading}
+      >
         Finalizar
       </Button>
       {message && <div id="payment-message">{message}</div>}

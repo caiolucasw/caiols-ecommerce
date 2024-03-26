@@ -5,7 +5,7 @@ const OrderSuccess = () => {
   const navigate = useNavigate();
   return (
     <Container maxWidth="lg">
-      <Box display="flex" justifyContent="end">
+      <Box display="flex" justifyContent="end" p={3}>
         <Button
           variant="contained"
           color="primary"

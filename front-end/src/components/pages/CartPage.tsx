@@ -156,63 +156,66 @@ const CartPage = () => {
             updateQuantityProductCart={updateQuantityProductCart}
           />
         )}
-        <Box
-          sx={{
-            p: 2,
-            minWidth: { md: 240, lg: 350 },
-            borderRadius: 2,
-          }}
-        >
+
+        {cartItems && cartItems.length > 0 && (
           <Box
             sx={{
-              border: "1px solid #ccc",
               p: 2,
+              minWidth: { md: 240, lg: 350 },
               borderRadius: 2,
             }}
           >
-            <Typography variant="subtitle1" fontWeight={700}>
-              Resumo da Compra
-            </Typography>
-            <Divider sx={{ mt: 1, mb: 2 }} />
-            {loading ? (
-              <Box
-                p={2}
-                flex={1}
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                gap={2}
-              >
-                <CircularProgress size={50} />
-              </Box>
-            ) : (
-              <Box display="flex" gap={3} flexDirection="column">
+            <Box
+              sx={{
+                border: "1px solid #ccc",
+                p: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="subtitle1" fontWeight={700}>
+                Resumo da Compra
+              </Typography>
+              <Divider sx={{ mt: 1, mb: 2 }} />
+              {loading ? (
                 <Box
+                  p={2}
+                  flex={1}
+                  width="100%"
                   display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
+                  justifyContent="center"
+                  gap={2}
                 >
-                  <Typography variant="h6" fontWeight={500}>
-                    Total:
-                  </Typography>
-                  <Typography variant="subtitle1" fontWeight={700}>
-                    {"R$ "}
-                    {total.toLocaleString("pt-BR", {
-                      maximumFractionDigits: 2,
-                      minimumFractionDigits: 2,
-                    })}
-                  </Typography>
+                  <CircularProgress size={50} />
                 </Box>
-                <Button
-                  variant="contained"
-                  onClick={() => navigate("/checkout")}
-                >
-                  Comprar
-                </Button>
-              </Box>
-            )}
+              ) : (
+                <Box display="flex" gap={3} flexDirection="column">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Typography variant="h6" fontWeight={500}>
+                      Total:
+                    </Typography>
+                    <Typography variant="subtitle1" fontWeight={700}>
+                      {"R$ "}
+                      {total.toLocaleString("pt-BR", {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                      })}
+                    </Typography>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate("/checkout")}
+                  >
+                    Comprar
+                  </Button>
+                </Box>
+              )}
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </Box>
   );

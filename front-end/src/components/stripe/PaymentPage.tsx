@@ -9,7 +9,7 @@ const stripePromise = loadStripe(
   "pk_test_51IXRdQECw79QhUt21oqnl2beME6z0mqOozFdRwv5GAx91HnkzYenH4z0bViBjivj6PvLJEllWcuqoRCYXdqMIHVO00Gk0UzPUs"
 );
 
-const PaymentPage = ({ cartId }: { cartId: number }) => {
+const PaymentPage = ({ cartId, total }: { cartId: number; total: number }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -49,7 +49,7 @@ const PaymentPage = ({ cartId }: { cartId: number }) => {
         <Box p={1}>
           {clientSecret && cartId && (
             <Elements options={options} stripe={stripePromise}>
-              <CheckoutForm cartId={cartId} />
+              <CheckoutForm cartId={cartId} total={total} />
             </Elements>
           )}
         </Box>
