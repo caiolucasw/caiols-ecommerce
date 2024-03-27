@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImages;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -49,6 +49,48 @@ class ProductController extends Controller
         return response()->json(['data' => $products->toArray()], 200);       
     }
 
+    public function insert(Request $request) {
+
+      $newProduct = $request->all();
+      $images = isset($newProduct['images_url']) ? $newProduct['images_url'] : NULL;
+
+      // it doesn't allow request without the images_url field
+      if (is_null($images) || !is_array($images) || count($images) <= 0) return response("Insert images for the product", 400);
+      
+      # Remove empty urls
+      $images_filter = array_filter($images, function($image) {
+        return !empty(trim($image));
+      });
+
+      if (count($images_filter) <= 0) return response("Insert images for the product", 400);
+
+      // Main Image
+      $newProduct['image_url'] = $images_filter[0];
+      unset($newProduct['images_url']);
+
+      $newProduct['brand_id'] = $newProduct['brand'];
+      $newProduct['category_id'] = $newProduct['category'];
+
+      // map to new array to map new ProductImages
+      $images_map = array_map(function($image) {
+        $productImage = new ProductImages();
+        $productImage->image_name = Str::uuid().time();
+        $productImage->image_url = $image;
+        return $productImage;
+      }, $images_filter);
+        
+
+      // create new product
+      $newProduct['id'] = Str::uuid();
+      $product = new Product();
+      $productAdded = $product->create($newProduct);
+
+      // add product images
+      $productAdded->product_images()->saveMany($images_map);
+
+      return response()->json($productAdded, 201);
+    }
+
     public function findById($id) {
 
         try {
@@ -58,7 +100,7 @@ class ProductController extends Controller
 
         }
 
-       return $product;
+        return $product;
     }
 
     public function getFilters() {
@@ -83,5 +125,18 @@ class ProductController extends Controller
         }
 
        return $filters;
+    }
+
+    public function productAddInfo() {
+        $info = [];
+        
+        $categories = Category::get();
+        $info['categories'] = isset($categories) ? $categories->toArray() : [];
+        
+        $brands = Brand::get();
+        $info['brands'] = isset($brands) ? $brands->toArray() : [];
+
+        return response()->json($info, 200);
+
     }
 }

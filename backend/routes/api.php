@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,12 +28,14 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [UserAuthController::class, 'register']);
 Route::post('/login', [UserAuthController::class, 'login']);
 
-Route::get('products', [ProductController::class, 'get']);
-Route::get('products/filters', [ProductController::class, 'getFilters']);
-Route::get('products/{id}', [ProductController::class, 'findById']);
+Route::get('/products', [ProductController::class, 'get']);
+Route::get('/products/filters', [ProductController::class, 'getFilters']);
+Route::get('/products/{id}', [ProductController::class, 'findById']);
 
-Route::get('categories/products_count', [CategoryController::class, 'getCategoriesProductsCount']);
-Route::get('brands/products_count', [BrandController::class, 'getBrandsProductsCount']);
+Route::get('/categories/products_count', [CategoryController::class, 'getCategoriesProductsCount']);
+Route::get('/brands/products_count', [BrandController::class, 'getBrandsProductsCount']);
+
+//
 
 
 Route::middleware('auth:api')->group(function() {
@@ -59,5 +62,11 @@ Route::middleware('auth:api')->group(function() {
 
     Route::get('/orders', [OrderController::class, 'get']);
     Route::get('/orders/{id}/details', [OrderItemController::class, 'getOrderItemsByOrderId']);
+
+    // add products info
+
+    Route::post("/products", [ProductController::class, "insert"]);
+
+    Route::get('/products/add/info', [ProductController::class, 'productAddInfo']);
 
 });

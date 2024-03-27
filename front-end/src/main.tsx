@@ -28,6 +28,7 @@ import CheckoutPage from "./components/pages/CheckoutPage.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrderSuccess from "./components/order/OrderSuccess.tsx";
+import AdminPage from "./components/AdminPage.tsx";
 
 const theme = createTheme({
   palette: {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
           {
             path: "/pedido-concluido",
             element: <OrderSuccess />,
+          },
+          {
+            path: "/admin",
+            element: <AdminPage />,
           },
         ],
       },

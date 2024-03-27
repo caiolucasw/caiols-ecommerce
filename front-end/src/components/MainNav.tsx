@@ -236,6 +236,7 @@ const MainNav = () => {
                   <MenuItem onClick={() => navigate("/minha-conta")}>
                     Minha Conta
                   </MenuItem>
+                  <MenuItem onClick={() => navigate("/admin")}>Admin</MenuItem>
                   <MenuItem onClick={() => dispatch(logout(user))}>
                     Sair
                   </MenuItem>

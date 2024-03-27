@@ -2,6 +2,8 @@ export interface CategoryInterface {
   id: number;
   label: string;
   value: string;
+  updated_at?: string;
+  created_at?: string;
 }
 
 export interface BrandInterface {
