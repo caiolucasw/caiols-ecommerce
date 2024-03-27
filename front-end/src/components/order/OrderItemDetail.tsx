@@ -63,7 +63,7 @@ const OrderItemDetail = ({ order }: OrderItemDetailProps) => {
 
   return (
     <>
-      <Box p={3} py={1} mb={1}>
+      <Box p={3} py={1} mb={1} mt={1}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="body2" fontWeight={700} pl={1}>
             Produto(s)
@@ -76,7 +76,7 @@ const OrderItemDetail = ({ order }: OrderItemDetailProps) => {
           <Divider />
         </Box>
       </Box>
-      <Grid container spacing={3}>
+      <Box>
         {loading ? (
           <Box
             display="flex"
@@ -90,7 +90,7 @@ const OrderItemDetail = ({ order }: OrderItemDetailProps) => {
           <>
             {orderDetailsItems &&
               orderDetailsItems.map((item) => (
-                <Grid item xs={12}>
+                <Box>
                   <Box display="flex" gap={5} p={3} pb={0}>
                     <Box>
                       <Box
@@ -128,11 +128,11 @@ const OrderItemDetail = ({ order }: OrderItemDetailProps) => {
                   <Box mt={2} p={3}>
                     <Divider />
                   </Box>
-                </Grid>
+                </Box>
               ))}
           </>
         )}
-      </Grid>
+      </Box>
       <Box p={3} pt={1}>
         <Box display="flex" justifyContent="space-between">
           {orderDetailsItems && orderDetailsItems.length > 0 && (

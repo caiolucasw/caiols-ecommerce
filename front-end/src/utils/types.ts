@@ -97,3 +97,12 @@ export interface Step {
   label: string;
   value: string;
 }
+
+export interface OrderItem {
+  id: number;
+  user_id?: number;
+  status: string;
+  updated_at?: string;
+  created_at?: string;
+  invoice_id?: string;
+}

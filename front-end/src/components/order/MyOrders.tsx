@@ -1,48 +1,12 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import OrderItem from "./OrderItem";
+import { OrderItem as OrderItemInterface } from "../../utils/types";
 import { useEffect, useState } from "react";
 import axiosApp from "../../customAxios";
-
-const orders: OrderItemInterface[] = [
-  {
-    id: 1,
-    status: "canceled",
-    date: "27/02/2023",
-  },
-  {
-    id: 2,
-    status: "sent",
-    date: "11/02/2023",
-  },
-  {
-    id: 3,
-    status: "done",
-    date: "12/05/2020",
-  },
-  {
-    id: 4,
-    status: "sent",
-    date: "10/09/2019",
-  },
-  {
-    id: 5,
-    status: "done",
-    date: "23/11/2018",
-  },
-];
-
-interface OrderItem {
-  id: number;
-  user_id?: number;
-  status?: string;
-  updated_at?: string;
-  created_at?: string;
-  invoice_id?: string;
-}
+import OrderItem from "./OrderItem";
 
 const MyOrders = () => {
-  const [orders, setOrders] = useState<OrderItem[] | null>(null);
+  const [orders, setOrders] = useState<OrderItemInterface[] | null>(null);
   const [loading, setLoading] = useState(false);
 
   const getOrders = async () => {
@@ -76,16 +40,7 @@ const MyOrders = () => {
         display="flex"
         flexDirection="column"
         sx={{
-          // // "& > .order-item:first-child": {
-          // //   borderTopLeftRadius: "5px",
-          // //   borderTopRightRadius: "5px",
-          // // },
-          // "& > .order-item:last-child": {
-          //   borderBottom: "1px solid #ccc !important",
-          //   borderBottomLeftRadius: "5px",
-          //   borderBottomRightRadius: "5px",
-          // },
-          gap: 1,
+          gap: 2.5,
         }}
       >
         {loading ? (
@@ -95,7 +50,7 @@ const MyOrders = () => {
         ) : (
           <>
             {orders && orders.length > 0 ? (
-              orders.map((order: OrderItem) => (
+              orders.map((order: OrderItemInterface) => (
                 <OrderItem key={order.id} order={order} />
               ))
             ) : (
