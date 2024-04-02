@@ -10,11 +10,14 @@ import { transformNumberToCurrency } from "../../utils/usefulMethods";
 import axiosApp from "../../customAxios";
 import { redirect, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAppDispatch } from "../../app/store";
+import { updateCartCount } from "../../app/userSlice";
 
 function CheckoutForm({ cartId, total }: { cartId: number; total: number }) {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [message, setMessage] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +27,8 @@ function CheckoutForm({ cartId, total }: { cartId: number; total: number }) {
       const res = await axiosApp.post(`/cart/buy/${cartId}`);
       if (res && res.status === 200) {
         toast.success("Sua compra foi realizada com sucesso!");
+        dispatch(updateCartCount(0));
+
         navigate("/");
       }
     } catch (err) {
