@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\AdminMiddleware;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
@@ -35,9 +36,7 @@ Route::get('/products/{id}', [ProductController::class, 'findById']);
 Route::get('/categories/products_count', [CategoryController::class, 'getCategoriesProductsCount']);
 Route::get('/brands/products_count', [BrandController::class, 'getBrandsProductsCount']);
 
-//
-
-
+// logged in users
 Route::middleware('auth:api')->group(function() {
     Route::delete('/logout', [UserAuthController::class, 'logout']);
     Route::get('/user', [UserAuthController::class, 'getUserBasicInfo']);
@@ -69,4 +68,34 @@ Route::middleware('auth:api')->group(function() {
 
     Route::get('/products/add/info', [ProductController::class, 'productAddInfo']);
 
+    // brands
+
+    Route::get("/brands", [BrandController::class, "get"]);
+    Route::post("/brands", [BrandController::class, "insert"]);
+
+
+    // brands
+    Route::get("/brands", [BrandController::class, "get"]);
+
+    // categories
+
+    Route::get("/categories", [CategoryController::class, "get"]);
+
+});
+
+// Only admin
+Route::middleware(['auth:api', AdminMiddleware::class])->group(function () {
+     // add products info
+
+     Route::post("/products", [ProductController::class, "insert"]);
+
+     Route::get('/products/add/info', [ProductController::class, 'productAddInfo']);
+ 
+     // brands
+ 
+     Route::post("/brands", [BrandController::class, "insert"]);
+ 
+ 
+     // categories
+     Route::post("/categories", [CategoryController::class, "insert"]);
 });
