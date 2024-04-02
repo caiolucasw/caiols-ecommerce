@@ -14,4 +14,22 @@ class BrandController extends Controller
 
         return response()->json(['data' => $categoriesCount], 200);
     }
+
+    public function get() {
+        $brands = Brand::orderBy('name', 'asc')->get();
+
+        return response()->json($brands, 200);
+    }
+
+    public function insert(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'image_url' => 'required'
+        ]);
+
+        $brand = Brand::create($request->all());
+
+        return response()->json($brand, 201);
+
+    }
 }

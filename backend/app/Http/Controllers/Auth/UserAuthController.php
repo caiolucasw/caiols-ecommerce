@@ -51,6 +51,7 @@ class UserAuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'type' => $user->type,
                 'token' => $token
             ];
             $cart = Cart::firstOrCreate(['user_id' => $user])->withSum('cart_items', 'quantity')->first();
@@ -86,6 +87,7 @@ class UserAuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'type' => $user->type,
             ];
 
             $cart = Cart::firstOrCreate(['user_id' => $user])->withSum('cart_items', 'quantity')->first();

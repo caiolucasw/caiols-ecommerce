@@ -20,7 +20,7 @@ class ProductController extends Controller
         $name = $request->query('name');
         $categories = $request->query('category');
         $brands = $request->query('brand');
-        $categoryName = $request->query('category_name'); // specific page, ex: /notebooks, /tablets
+        $categoryName = $request->query('categoryName'); // specific page, ex: /notebooks, /tablets
 
         if ($name) {
             $qb = $qb->where('name', 'like', '%'.$name.'%');

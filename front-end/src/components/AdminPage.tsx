@@ -10,7 +10,8 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ProductsAdd from "./admin/ProductsAdd";
-import BrandsAdd from "./admin/BrandsAdd";
+import Brands from "./admin/Brands";
+import Categories from "./admin/Categories";
 
 const AdminPage = () => {
   const [currentTab, setCurrentTab] = useState("products");
@@ -61,11 +62,13 @@ const AdminPage = () => {
             >
               <Tab value="products" label="Produtos" />
               <Tab value="brands" label="Marcas" />
+              <Tab value="categories" label="Categorias" />
             </Tabs>
 
             <Box p={2}>
               {currentTab === "products" && <ProductsAdd />}
-              {currentTab === "brands" && <BrandsAdd />}
+              {currentTab === "brands" && <Brands />}
+              {currentTab === "categories" && <Categories />}
             </Box>
           </Box>
         </Box>
