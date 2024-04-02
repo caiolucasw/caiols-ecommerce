@@ -11,7 +11,11 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { fetchProducts } from "../app/searchProductsSlice";
+import {
+  fetchProducts,
+  setBrand,
+  setCategory,
+} from "../app/searchProductsSlice";
 import { RootState, useAppDispatch, useAppSelector } from "../app/store";
 import axiosApp from "../customAxios";
 import FilterListIcon from "@mui/icons-material/FilterListOutlined";
@@ -34,17 +38,16 @@ const minDistance = 0;
 const ProductFilters = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const productName = useAppSelector(
-    (state: RootState) => state.searchProducts.name
+  const selectedBrands = useAppSelector(
+    (state) => state.searchProducts.filters.brands
   );
-  const [selectedCategories, setSelectedCategories] =
-    useState<CategorySelectedInterface>({});
+  const selectedCategories = useAppSelector(
+    (state) => state.searchProducts.filters.categories
+  );
   const [categories, setCategories] = useState<
     CategoryProductsCountInterface[]
   >([]);
-  const [selectedBrands, setSelectedBrands] = useState<BrandSelectedInterface>(
-    {}
-  );
+
   const [brands, setBrands] = useState<BrandProductsCountInterface[]>([]);
   const [sliderValue, setSliderValue] = useState<number[]>([0, 10000]);
   const lgScreen = useMediaQuery(theme.breakpoints.up("md"));
@@ -74,80 +77,40 @@ const ProductFilters = () => {
   };
 
   const addCategory = (category: CategoryProductsCountInterface) => {
-    if (!selectedCategories[category.id]) {
-      const categoriesAux = [
-        ...Object.keys(selectedCategories),
-        category.id.toString(),
-      ];
-
-      dispatch(
-        fetchProducts({
-          name: productName,
-          category: categoriesAux,
-          brand: Object.keys(selectedBrands),
-        })
-      );
-      // make request with thunk
-      setSelectedCategories((current) => ({
-        ...current,
-        [category.id]: category,
-      }));
-    }
+    dispatch(
+      setCategory({
+        category: category,
+        type: "ADD",
+      })
+    );
   };
 
   const removeCategory = (category: CategoryProductsCountInterface) => {
-    if (!selectedCategories[category.id]) return;
-
-    const auxCategories = { ...selectedCategories };
-    delete auxCategories[category.id];
-
-    // @ts-ignore
     dispatch(
-      fetchProducts({
-        name: productName,
-        category: Object.keys(auxCategories),
-        brand: Object.keys(selectedBrands),
+      // @ts-ignore
+      setCategory({
+        category: category,
+        type: "REMOVE",
       })
     );
-    setSelectedCategories(auxCategories);
   };
 
   const addBrand = (brand: BrandProductsCountInterface) => {
-    if (!selectedBrands[brand.id]) {
-      const brandsAux = [...Object.keys(selectedBrands), brand.id.toString()];
-      const categoriesAux = Object.keys(selectedCategories);
-      // @ts-ignore
-      dispatch(
-        fetchProducts({
-          name: productName,
-          category: categoriesAux,
-          brand: brandsAux,
-        })
-      );
-      // make request with thunk
-      setSelectedBrands((current) => ({
-        ...current,
-        [brand.id]: brand,
-      }));
-    }
+    dispatch(
+      setBrand({
+        brand: brand,
+        type: "ADD",
+      })
+    );
   };
 
   const removeBrand = (brand: BrandProductsCountInterface) => {
-    if (!selectedBrands[brand.id]) return;
-
-    const auxBrands = { ...selectedBrands };
-    delete auxBrands[brand.id];
-
-    const auxCategories = Object.keys(selectedCategories);
-    // @ts-ignore
     dispatch(
-      fetchProducts({
-        name: productName,
-        category: auxCategories,
-        brand: Object.keys(auxBrands),
+      setBrand({
+        brand: brand,
+        type: "REMOVE",
       })
     );
-    setSelectedBrands(auxBrands);
   };
 
   const getFilters = async () => {

@@ -1,10 +1,11 @@
 import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useDispatch } from "react-redux";
-import { setInputNameValue } from "../app/searchProductsSlice";
+import { fetchProducts, setInputNameValue } from "../app/searchProductsSlice";
+import { useAppDispatch, useAppSelector } from "../app/store";
 
 const SearchInput = () => {
-  const dispatch = useDispatch();
+  const state = useAppSelector((state) => state.searchProducts);
+  const dispatch = useAppDispatch();
   return (
     <TextField
       variant="outlined"
@@ -18,6 +19,16 @@ const SearchInput = () => {
             borderColor: "#70e000",
             borderRadius: 4,
           },
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          dispatch(
+            fetchProducts({
+              ...state.filters,
+              name: state.name,
+            })
+          );
+        }
       }}
       InputProps={{
         endAdornment: (

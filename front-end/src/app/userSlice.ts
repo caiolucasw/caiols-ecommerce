@@ -6,6 +6,7 @@ export interface UserState {
   name: string;
   id: number | null;
   token?: string | null;
+  type: string;
   loading?: boolean;
   cart_items_count?: number;
 }
@@ -14,6 +15,7 @@ let initialState: UserState = {
   name: "",
   id: null,
   token: null,
+  type: "default",
   loading: false,
 };
 

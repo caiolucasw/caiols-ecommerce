@@ -29,6 +29,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrderSuccess from "./components/order/OrderSuccess.tsx";
 import AdminPage from "./components/AdminPage.tsx";
+import AllowAdminPage from "./components/admin/AllowAdminPage.tsx";
+import ContainerMainPages from "./components/ContainerMainPages.tsx";
 
 const theme = createTheme({
   palette: {
@@ -73,7 +75,13 @@ const router = createBrowserRouter([
           },
           {
             path: "/admin",
-            element: <AdminPage />,
+            element: <AllowAdminPage />,
+            children: [
+              {
+                path: "",
+                element: <AdminPage />,
+              },
+            ],
           },
         ],
       },
@@ -81,24 +89,29 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           {
-            path: "/notebooks",
-            element: <NotebooksContent />,
-          },
-          {
-            path: "/tablets",
-            element: <TabletsContent />,
-          },
-          {
-            path: "/celulares",
-            element: <PhonesContent />,
-          },
-          {
-            path: "/tvs",
-            element: <TvsContent />,
-          },
-          {
-            path: "/cameras",
-            element: <CamerasContent />,
+            element: <ContainerMainPages />,
+            children: [
+              {
+                path: "/notebooks",
+                element: <NotebooksContent />,
+              },
+              {
+                path: "/tablets",
+                element: <TabletsContent />,
+              },
+              {
+                path: "/celulares",
+                element: <PhonesContent />,
+              },
+              {
+                path: "/tvs",
+                element: <TvsContent />,
+              },
+              {
+                path: "/cameras",
+                element: <CamerasContent />,
+              },
+            ],
           },
           {
             path: "/product/:id",

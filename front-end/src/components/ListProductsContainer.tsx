@@ -1,24 +1,14 @@
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  LinearProgress,
-  Typography,
-} from "@mui/material";
-
+import { Box, Grid, LinearProgress, Typography } from "@mui/material";
 import ProductItem from "./ProductItem";
-import { fetchProducts } from "../app/searchProductsSlice";
-import { ProductInterface } from "../utils/types";
+import { fetchProducts, setCategoryName } from "../app/searchProductsSlice";
 import { useEffect } from "react";
 import { RootState, useAppDispatch, useAppSelector } from "../app/store";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 
-interface InterfaceProps {
-  products: ProductInterface[];
-}
-
 const ListProductsContainer = ({ category }: { category?: string }) => {
   const dispatch = useAppDispatch();
+  const filters = useAppSelector((state) => state.searchProducts.filters);
+  const productName = useAppSelector((state) => state.searchProducts.name);
   const products = useAppSelector(
     (state: RootState) => state.searchProducts.products
   );
@@ -28,8 +18,13 @@ const ListProductsContainer = ({ category }: { category?: string }) => {
 
   useEffect(() => {
     const categoryName = category || "";
-    dispatch(fetchProducts({ category_name: categoryName }));
+    // @ts-ignore
+    dispatch(setCategoryName(categoryName));
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchProducts({ ...filters, name: productName }));
+  }, [filters]);
 
   return (
     <Box
