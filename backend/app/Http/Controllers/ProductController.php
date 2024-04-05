@@ -18,9 +18,10 @@ class ProductController extends Controller
     public function get(Request $request) {
         $qb = Product::query();
         $name = $request->query('name');
-        $categories = $request->query('category');
-        $brands = $request->query('brand');
+        $categories = $request->query('categories');
+        $brands = $request->query('brands');
         $categoryName = $request->query('categoryName'); // specific page, ex: /notebooks, /tablets
+        $price = $request->query('price');
 
         if ($name) {
             $qb = $qb->where('name', 'like', '%'.$name.'%');
@@ -42,6 +43,13 @@ class ProductController extends Controller
             $brandsArray = explode(',', $brands);
             $qb = $qb->whereIn('brand_id', $brandsArray);
             
+        }
+
+        if (isset($price)) {
+            $prices = explode(',', $price);
+            if (is_array($prices) && count($prices) === 2 && ($prices[0] > 0 || $prices[1] > 0)) {
+                $qb->whereBetween('price', $prices);
+            }
         }
 
         $products = $qb->selectRaw('products.*')->get();

@@ -12,11 +12,11 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import {
-  fetchProducts,
   setBrand,
   setCategory,
+  setPriceRange,
 } from "../app/searchProductsSlice";
-import { RootState, useAppDispatch, useAppSelector } from "../app/store";
+import { useAppDispatch, useAppSelector } from "../app/store";
 import axiosApp from "../customAxios";
 import FilterListIcon from "@mui/icons-material/FilterListOutlined";
 import {
@@ -24,14 +24,6 @@ import {
   CategoryProductsCountInterface,
 } from "../utils/types";
 import { useLocation } from "react-router-dom";
-
-interface CategorySelectedInterface {
-  [key: number]: CategoryProductsCountInterface;
-}
-
-interface BrandSelectedInterface {
-  [key: number]: BrandProductsCountInterface;
-}
 
 const minDistance = 0;
 
@@ -44,15 +36,24 @@ const ProductFilters = () => {
   const selectedCategories = useAppSelector(
     (state) => state.searchProducts.filters.categories
   );
+  const [minMaxSlider, setMinMaxSlider] = useState<number[]>([0, 0]);
+  const [sliderValue, setSliderValue] = useState<number[]>([0, 0]);
+
+  const price = useAppSelector((state) => state.searchProducts.filters.price);
   const [categories, setCategories] = useState<
     CategoryProductsCountInterface[]
   >([]);
 
   const [brands, setBrands] = useState<BrandProductsCountInterface[]>([]);
-  const [sliderValue, setSliderValue] = useState<number[]>([0, 10000]);
   const lgScreen = useMediaQuery(theme.breakpoints.up("md"));
 
   const location = useLocation();
+
+  const handleChangeCommited = (e: any, value: number | number[]) => {
+    if (Array.isArray(value)) {
+      dispatch(setPriceRange(value));
+    }
+  };
 
   const handleChangeSlider = (
     event: Event,
@@ -121,10 +122,13 @@ const ProductFilters = () => {
         setCategories(res.data?.categories || []);
         setBrands(res.data?.brands || []);
         if (res.data.price) {
-          setSliderValue([
+          const prices = [
             res.data.price.minPrice || 0,
             res.data.price.maxPrice || 0,
-          ]);
+          ];
+          dispatch(setPriceRange(prices));
+          setMinMaxSlider(prices);
+          setSliderValue(prices);
         }
       }
     } catch (err) {
@@ -169,8 +173,9 @@ const ProductFilters = () => {
                 <Slider
                   value={sliderValue}
                   onChange={handleChangeSlider}
-                  min={sliderValue[0]}
-                  max={sliderValue[1]}
+                  onChangeCommitted={handleChangeCommited}
+                  min={minMaxSlider[0]}
+                  max={minMaxSlider[1]}
                   disableSwap
                 />
                 <Box display="flex" justifyContent={"space-between"}>

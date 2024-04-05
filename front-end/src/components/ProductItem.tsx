@@ -24,11 +24,11 @@ const ProductItem = ({ product }: ProductItemInterface) => {
       onClick={() => navigate(`/product/${product.id}`)}
     >
       <CardContent>
-        <Box>
+        <Box display="flex" justifyContent="center" mb={1.5}>
           <img
             src={product.image_url}
-            width="284px"
-            height="284px"
+            width="200px"
+            height="200px"
             alt="notebook"
             style={{
               maxWidth: "100%",

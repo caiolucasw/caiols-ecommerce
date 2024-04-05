@@ -2,10 +2,21 @@ import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { fetchProducts, setInputNameValue } from "../app/searchProductsSlice";
 import { useAppDispatch, useAppSelector } from "../app/store";
+import { useLocation } from "react-router-dom";
+
+const categoryNameMap: { [key: string]: string } = {
+  notebooks: "laptops",
+  tablets: "tablets",
+  celulares: "phones",
+  tvs: "tvs",
+};
 
 const SearchInput = () => {
   const state = useAppSelector((state) => state.searchProducts);
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const pathName = location.pathname ? location.pathname.substring(1) : "";
+  const categoryName = pathName ? categoryNameMap[pathName] : "";
   return (
     <TextField
       variant="outlined"
@@ -26,6 +37,7 @@ const SearchInput = () => {
             fetchProducts({
               ...state.filters,
               name: state.name,
+              ...(categoryName && { categoryName }),
             })
           );
         }
@@ -38,6 +50,7 @@ const SearchInput = () => {
         ),
       }}
       onChange={(e) => dispatch(setInputNameValue(e.target.value))}
+      value={state?.name || ""}
       fullWidth
     />
   );

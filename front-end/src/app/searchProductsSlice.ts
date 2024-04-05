@@ -1,9 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type {
-  ActionCreator,
-  PayloadAction,
-  PayloadActionCreator,
-} from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import axiosApp from "../customAxios";
 import { formatQueryParams } from "../utils/queryParams";
 import {
@@ -23,9 +19,7 @@ interface BrandSelectedInterface {
 export interface Filters {
   categories: CategorySelectedInterface;
   brands: BrandSelectedInterface;
-  priceMin: number;
-  priceMax: number;
-  categoryName: "";
+  price: number[];
 }
 export interface SearchProductsState {
   name: string;
@@ -41,20 +35,34 @@ const initialState: SearchProductsState = {
   filters: {
     categories: {},
     brands: {},
-    priceMin: 0,
-    priceMax: 0,
-    categoryName: "",
+    price: [0, 0],
   },
 };
 
+interface CategoryName {
+  categoryName: string;
+}
+
+type FetchProductsInterface =
+  | (Filters & { name?: string; categoryName?: string })
+  | CategoryName;
+
 export const fetchProducts = createAsyncThunk(
   "products",
-  async (filters: Filters & { name?: string }) => {
-    const qs = formatQueryParams({
-      ...filters,
-      brands: Object.keys(filters.brands),
-      categories: Object.keys(filters.categories),
-    });
+  async (filters: FetchProductsInterface) => {
+    const objHasKeys = Object.keys(filters).length > 1;
+    let qs = "";
+
+    // check if it has other filters besides categoryName
+    if (objHasKeys) {
+      qs = formatQueryParams({
+        ...filters,
+        brands: Object.keys((filters as Filters).brands),
+        categories: Object.keys((filters as Filters).categories),
+      });
+    } else {
+      qs = formatQueryParams(filters);
+    }
 
     try {
       const response = await axiosApp.get(`/products${qs}`);
@@ -176,14 +184,18 @@ export const searchProductsSlice = createSlice({
       return state;
     },
 
-    setCategoryName: (state, action: any) => {
-      state = {
-        ...state,
-        filters: {
-          ...state.filters,
-          categoryName: action?.payload || "",
-        },
-      };
+    setPriceRange: (state, action: PayloadAction<number[]>) => {
+      console.log(action);
+      const price = action.payload;
+      if (price.length === 2) {
+        state = {
+          ...state,
+          filters: {
+            ...state.filters,
+            price,
+          },
+        };
+      }
 
       return state;
     },
@@ -196,13 +208,17 @@ export const searchProductsSlice = createSlice({
     // ---------------
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchProducts.pending, (state, action) => {
+    builder.addCase(fetchProducts.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
       if (action.payload) {
         state.products = action.payload;
       }
+      state.loading = false;
+    });
+
+    builder.addCase(fetchProducts.rejected, (state) => {
       state.loading = false;
     });
   },
@@ -213,7 +229,7 @@ export const {
   setBrand,
   setCategory,
   clearSearchProducts,
-  setCategoryName,
+  setPriceRange,
 } = searchProductsSlice.actions;
 
 export default searchProductsSlice.reducer;

@@ -1,12 +1,13 @@
 import { Box, Grid, LinearProgress, Typography } from "@mui/material";
 import ProductItem from "./ProductItem";
-import { fetchProducts, setCategoryName } from "../app/searchProductsSlice";
-import { useEffect } from "react";
+import { clearSearchProducts, fetchProducts } from "../app/searchProductsSlice";
+import { useEffect, useRef } from "react";
 import { RootState, useAppDispatch, useAppSelector } from "../app/store";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 
 const ListProductsContainer = ({ category }: { category?: string }) => {
   const dispatch = useAppDispatch();
+  const firstRender = useRef(true);
   const filters = useAppSelector((state) => state.searchProducts.filters);
   const productName = useAppSelector((state) => state.searchProducts.name);
   const products = useAppSelector(
@@ -16,14 +17,21 @@ const ListProductsContainer = ({ category }: { category?: string }) => {
     (state: RootState) => state.searchProducts.loading
   );
 
+  const moreFields = { name: productName, categoryName: category };
+
   useEffect(() => {
-    const categoryName = category || "";
-    // @ts-ignore
-    dispatch(setCategoryName(categoryName));
+    return () => {
+      dispatch(clearSearchProducts());
+    };
   }, []);
 
   useEffect(() => {
-    dispatch(fetchProducts({ ...filters, name: productName }));
+    const values = firstRender.current
+      ? { categoryName: category || "" }
+      : { ...filters, ...moreFields };
+
+    dispatch(fetchProducts(values));
+    firstRender.current = false;
   }, [filters]);
 
   return (
