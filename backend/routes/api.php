@@ -12,6 +12,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\Address;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
@@ -47,7 +48,7 @@ Route::middleware('auth:api')->group(function() {
     Route::post('/address', [AddressController::class, 'createUserAddress']);
     Route::put('/address/{id}', [AddressController::class, 'updateUserAddress']);
     Route::delete('/address/{id}', [AddressController::class, 'deleteUserAddress']);
-    
+    Route::post('/address/{id}/change-default', [AddressController::class, 'changeDefaultAddress']);
     
     // cart related routes
 
@@ -80,6 +81,7 @@ Route::middleware('auth:api')->group(function() {
     // categories
 
     Route::get("/categories", [CategoryController::class, "get"]);
+
 
 });
 

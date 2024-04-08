@@ -9,8 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import AddressItem from "../AddressItem";
-import ModalAddress from "../ModalAddress";
-import ModalRemove from "../utils/ModalRemove";
 import { toast } from "react-toastify";
 import FormAddressCheckout from "./FormAddressCheckout";
 import CloseIcon from "@mui/icons-material/Close";
@@ -27,6 +25,7 @@ const customAddress = {
   district: "",
   state: "",
   city: "",
+  default: 0,
 };
 
 const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
@@ -34,6 +33,8 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
   const [loading, setLoading] = useState<string | null>(null);
   const [formType, setFormType] = useState<modalType>("");
   const [addressSelected, setAddressSelected] = useState<Address | null>(null);
+  const hasDefaultAddress =
+    addresses.filter((a) => a.default === 1).length == 1;
 
   const getAddress = async () => {
     setLoading("getAddresses");
@@ -45,6 +46,33 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
       setLoading(null);
     } catch (err) {
       console.log(err);
+      setLoading(null);
+    }
+  };
+
+  const handleChangeDefaultAddress = async (id: number, checked: boolean) => {
+    setLoading("default-address");
+    const value = checked ? 1 : 0;
+    try {
+      const res = await axiosApp.post(`/address/${id}/change-default`, {
+        value,
+      });
+      if (res.status === 200) {
+        toast.success("Endereço padrão atualizado");
+        setAddresses((curr) => {
+          const addressAux = curr.map((a) => ({
+            ...a,
+            default: a.id === id ? value : 0,
+          }));
+          return addressAux;
+        });
+      } else {
+        toast.error("Houve um erro!");
+      }
+    } catch (err) {
+      toast.error("Houve um erro!");
+      console.log(err);
+    } finally {
       setLoading(null);
     }
   };
@@ -100,6 +128,8 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
                     address={address}
                     setOpenModal={setFormType}
                     setAddressSelected={setAddressSelected}
+                    handleChangeDefaultAddress={handleChangeDefaultAddress}
+                    loading={loading}
                   />
                 ))}
               <Box>
@@ -116,7 +146,15 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
               </Box>
 
               <Box mb={2} p={2} display="flex" justifyContent="end">
-                <Button variant="contained" onClick={() => handleNext()}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    if (hasDefaultAddress) handleNext();
+                    else {
+                      toast.error("Selecione ou adicione um endereço padrão");
+                    }
+                  }}
+                >
                   Próximo
                 </Button>
               </Box>

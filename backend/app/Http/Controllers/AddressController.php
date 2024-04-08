@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AddressController extends Controller
 {
@@ -81,9 +82,28 @@ class AddressController extends Controller
         }
 
         return response(404);
-       
+
+    }
+
+    public function changeDefaultAddress(Request $request, string $id) {
+        $user = auth()->user();
+        $value = $request->post('value');
+
+        $value = isset($value) && in_array(trim($value), array('0', '1')) ? trim($value) : NULL;
+
+        if (is_null($value)) return response()->json([], 400);
+
+        $address = DB::update("
+            UPDATE addresses 
+            SET `default` = CASE
+                WHEN id = ? THEN ?
+                ELSE 0
+            END
+            WHERE user_id = ?" ,
+            [$id, $value, $user->id]
+        );
+
+        return response()->json(['address' => $address], 200);
         
-
-
     }
 }

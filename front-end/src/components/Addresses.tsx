@@ -5,6 +5,7 @@ import AddressItem from "./AddressItem";
 import { Address } from "../utils/types";
 import ModalAddress from "./ModalAddress";
 import ModalRemove from "./utils/ModalRemove";
+import { toast } from "react-toastify";
 
 const customAddress = {
   id: -1,
@@ -16,6 +17,7 @@ const customAddress = {
   district: "",
   state: "",
   city: "",
+  default: 0,
 };
 
 const Addresses = () => {
@@ -55,6 +57,33 @@ const Addresses = () => {
     }
   };
 
+  const handleChangeDefaultAddress = async (id: number, checked: boolean) => {
+    setLoading("default-address");
+    const value = checked ? 1 : 0;
+    try {
+      const res = await axiosApp.post(`/address/${id}/change-default`, {
+        value,
+      });
+      if (res.status === 200) {
+        toast.success("Endereço padrão atualizado");
+        setAddresses((curr) => {
+          const addressAux = curr.map((a) => ({
+            ...a,
+            default: a.id === id ? value : 0,
+          }));
+          return addressAux;
+        });
+      } else {
+        toast.error("Houve um erro!");
+      }
+    } catch (err) {
+      toast.error("Houve um erro!");
+      console.log(err);
+    } finally {
+      setLoading(null);
+    }
+  };
+
   useEffect(() => {
     getAddress();
   }, []);
@@ -79,6 +108,8 @@ const Addresses = () => {
                   address={address}
                   setOpenModal={setOpenModal}
                   setAddressSelected={setAddressSelected}
+                  handleChangeDefaultAddress={handleChangeDefaultAddress}
+                  loading={loading}
                 />
               ))}
           </>

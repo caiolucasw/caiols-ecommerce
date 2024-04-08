@@ -90,6 +90,7 @@ export interface Address {
   district: string;
   city: string;
   state: string;
+  default: number;
 }
 
 export interface Step {
