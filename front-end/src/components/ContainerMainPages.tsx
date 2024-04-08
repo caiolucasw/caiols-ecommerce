@@ -1,18 +1,36 @@
-import { useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
-import { useAppDispatch } from "../app/store";
-import { clearSearchProducts } from "../app/searchProductsSlice";
+import { useTheme } from "@mui/material/styles";
+import { Outlet } from "react-router-dom";
+import { Box, useMediaQuery } from "@mui/material";
+import SearchInput from "./SearchInput";
 
 const ContainerMainPages = () => {
-  const location = useLocation();
-  const dispatch = useAppDispatch();
+  const theme = useTheme();
+  const largeScreen = useMediaQuery(theme.breakpoints.up("md"));
 
-  useEffect(() => {
-    // dispatch(clearSearchProducts());
-    console.log("teste");
-  }, [location]);
-
-  return <Outlet />;
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        ...(largeScreen && {
+          display: "flex",
+          gap: 3,
+        }),
+      }}
+    >
+      {!largeScreen && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          pb={1}
+          mb={1.5}
+        >
+          <SearchInput />
+        </Box>
+      )}
+      <Outlet />
+    </Box>
+  );
 };
 
 export default ContainerMainPages;

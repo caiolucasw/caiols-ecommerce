@@ -47,7 +47,12 @@ const listItems = [
   },
 ];
 
-const DepartmentList = ({ styles }: { styles?: React.CSSProperties }) => {
+interface DepartmentListProps {
+  closeDrawer?: () => void;
+  styles?: React.CSSProperties;
+}
+
+const DepartmentList = ({ closeDrawer, styles }: DepartmentListProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -74,7 +79,10 @@ const DepartmentList = ({ styles }: { styles?: React.CSSProperties }) => {
             ...(styles && styles),
             width: "100%",
           }}
-          onClick={() => navigate(item.path)}
+          onClick={() => {
+            navigate(item.path);
+            if (closeDrawer) closeDrawer();
+          }}
         >
           <SvgIcon>{item.icon}</SvgIcon>
           <Box

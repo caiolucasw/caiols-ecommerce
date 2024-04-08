@@ -2,7 +2,7 @@ import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { fetchProducts, setInputNameValue } from "../app/searchProductsSlice";
 import { useAppDispatch, useAppSelector } from "../app/store";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const categoryNameMap: { [key: string]: string } = {
   notebooks: "laptops",
@@ -15,6 +15,7 @@ const SearchInput = () => {
   const state = useAppSelector((state) => state.searchProducts);
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const pathName = location.pathname ? location.pathname.substring(1) : "";
   const categoryName = pathName ? categoryNameMap[pathName] : "";
   return (
@@ -33,13 +34,16 @@ const SearchInput = () => {
       }}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          dispatch(
-            fetchProducts({
-              ...state.filters,
-              name: state.name,
-              ...(categoryName && { categoryName }),
-            })
-          );
+          if (pathName) navigate("/", { state: { productName: true } });
+          else {
+            dispatch(
+              fetchProducts({
+                ...state.filters,
+                name: state.name,
+                ...(categoryName && { categoryName }),
+              })
+            );
+          }
         }
       }}
       InputProps={{

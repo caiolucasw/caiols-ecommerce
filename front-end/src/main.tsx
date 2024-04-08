@@ -23,7 +23,7 @@ import Login from "./components/pages/Login.tsx";
 import Signup from "./components/pages/Signup.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import CartPage from "./components/pages/CartPage.tsx";
-import PaymentPage from "./components/stripe/PaymentPage.tsx";
+
 import CheckoutPage from "./components/pages/CheckoutPage.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

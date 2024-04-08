@@ -82,9 +82,14 @@ const OrderItem = ({ order }: OrderItemProps) => {
             </Typography>
           </Box>
           <Box width={{ xs: 1 / 3 }} display="flex" justifyContent="center">
-            <Typography variant="body1">
-              {status && <Chip label={status.label} color={status.type} />}
-            </Typography>
+            {status && (
+              <Chip
+                label={
+                  <Typography variant="caption">{status.label}</Typography>
+                }
+                color={status.type}
+              />
+            )}
           </Box>
         </Box>
       </Box>

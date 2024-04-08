@@ -77,6 +77,7 @@ const MainNav = () => {
         sx={{
           width: "100%",
           display: "flex",
+          justifyContent: "space-between",
           mx: "auto",
           maxWidth: "1400px",
           gap: 2,
@@ -122,6 +123,9 @@ const MainNav = () => {
                     p={5}
                   >
                     <DepartmentList
+                      closeDrawer={() => {
+                        setDrawerOpen(false);
+                      }}
                       styles={{
                         justifyContent: "center",
                         width: 180,
@@ -171,6 +175,7 @@ const MainNav = () => {
             <SearchInput />
           </Box>
         )}
+
         <Box display="flex" alignItems="center" sx={{ gap: 3, px: 3 }}>
           <Box>
             <IconButton

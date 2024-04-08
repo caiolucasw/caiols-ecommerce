@@ -90,7 +90,7 @@ const OrderItemDetail = ({ order }: OrderItemDetailProps) => {
           <>
             {orderDetailsItems &&
               orderDetailsItems.map((item) => (
-                <Box>
+                <Box key={item.product_id}>
                   <Box display="flex" gap={5} p={3} pb={0}>
                     <Box>
                       <Box

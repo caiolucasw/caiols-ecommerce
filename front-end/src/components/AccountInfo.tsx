@@ -14,7 +14,6 @@ const AccountInfo = () => {
       const res = await axiosApp.get("/user-details");
       if (res && res.data) {
         setUser(res.data);
-        console.log(res.data);
       }
     } catch (err) {
       console.log(err);

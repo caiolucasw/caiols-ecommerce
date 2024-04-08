@@ -185,7 +185,6 @@ export const searchProductsSlice = createSlice({
     },
 
     setPriceRange: (state, action: PayloadAction<number[]>) => {
-      console.log(action);
       const price = action.payload;
       if (price.length === 2) {
         state = {

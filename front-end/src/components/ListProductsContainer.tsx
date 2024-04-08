@@ -4,8 +4,11 @@ import { clearSearchProducts, fetchProducts } from "../app/searchProductsSlice";
 import { useEffect, useRef } from "react";
 import { RootState, useAppDispatch, useAppSelector } from "../app/store";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
+import { useLocation } from "react-router-dom";
 
 const ListProductsContainer = ({ category }: { category?: string }) => {
+  const { state } = useLocation();
+  const hasProductName = state?.productName || null; // if the request was made through the input with product name
   const dispatch = useAppDispatch();
   const firstRender = useRef(true);
   const filters = useAppSelector((state) => state.searchProducts.filters);
@@ -27,9 +30,12 @@ const ListProductsContainer = ({ category }: { category?: string }) => {
 
   useEffect(() => {
     const values = firstRender.current
-      ? { categoryName: category || "" }
+      ? hasProductName
+        ? moreFields
+        : { categoryName: category || "" }
       : { ...filters, ...moreFields };
 
+    // @ts-ignore
     dispatch(fetchProducts(values));
     firstRender.current = false;
   }, [filters]);
