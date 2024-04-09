@@ -27,7 +27,7 @@ import { useLocation } from "react-router-dom";
 
 const minDistance = 0;
 
-const ProductFilters = () => {
+const ProductFilters = ({ category }: { category?: string }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const selectedBrands = useAppSelector(
@@ -115,8 +115,9 @@ const ProductFilters = () => {
   };
 
   const getFilters = async () => {
+    const categoryParam = category ? `?categoryName=${category}` : "";
     try {
-      const res = await axiosApp.get("/products/filters");
+      const res = await axiosApp.get("/products/filters" + categoryParam);
 
       if (res.status === 200 && res.data) {
         setCategories(res.data?.categories || []);

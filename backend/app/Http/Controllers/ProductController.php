@@ -114,14 +114,15 @@ class ProductController extends Controller
     public function getFilters() {
 
         $query = Product::query();
-        $categoryName = request()->query('category_name');
+        $categoryName = request()->query('categoryName');
+        $categoryName = isset($categoryName) && strlen(trim($categoryName)) > 0 ? trim($categoryName) : '';
 
         try {
             $filters = [];
-            $filters['categories'] = Category::getCategoriesProductsCount();
-            $filters['brands'] = Brand::getBrandsProductsCount();
+            $filters['categories'] = Category::getCategoriesProductsCount($categoryName);
+            $filters['brands'] = Brand::getBrandsProductsCount($categoryName);
             $query = $query->join('categories', 'products.category_id', '=', 'categories.id')->selectRaw('MAX(products.price) AS maxPrice, MIN(products.price) as minPrice');
-            if ($categoryName) {
+            if (!empty($categoryName)) {
                 $query = $query->where('categories.value', '=', $categoryName);
 
             }

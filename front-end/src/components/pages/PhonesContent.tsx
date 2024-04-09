@@ -2,10 +2,11 @@ import ListProductsContainer from "../ListProductsContainer";
 import ProductFilters from "../ProductFilters";
 
 const PhonesContent = () => {
+  const category = "phones";
   return (
     <>
-      <ProductFilters />
-      <ListProductsContainer category="phones" />;
+      <ProductFilters category={category} />
+      <ListProductsContainer category={category} />;
     </>
   );
 };

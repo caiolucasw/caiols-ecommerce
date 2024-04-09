@@ -1,12 +1,12 @@
-import React from "react";
 import ListProductsContainer from "../ListProductsContainer";
 import ProductFilters from "../ProductFilters";
 
 const TabletsContent = () => {
+  const category = "tablets";
   return (
     <>
-      <ProductFilters />
-      <ListProductsContainer category="tablets" />;
+      <ProductFilters category={category} />
+      <ListProductsContainer category={category} />;
     </>
   );
 };
