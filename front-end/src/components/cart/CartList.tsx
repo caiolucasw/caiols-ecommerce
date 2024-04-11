@@ -9,11 +9,16 @@ interface CartCheckoutProps {
     quantity: number,
     cartItemId: number
   ) => Promise<void>;
+  updateQuantityProductCartNotLogged: (
+    productId: string,
+    quantity: number
+  ) => void;
 }
 
 const CartList = ({
   cartItems,
   updateQuantityProductCart,
+  updateQuantityProductCartNotLogged,
 }: CartCheckoutProps) => {
   return (
     <Box p={2} flex={1} display="flex" flexDirection="column" gap={2}>
@@ -22,6 +27,9 @@ const CartList = ({
           <CartItem
             item={item}
             updateQuantityProductCart={updateQuantityProductCart}
+            updateQuantityProductCartNotLogged={
+              updateQuantityProductCartNotLogged
+            }
             key={item.id}
           />
         ))

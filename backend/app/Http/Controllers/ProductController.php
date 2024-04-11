@@ -148,4 +148,17 @@ class ProductController extends Controller
         return response()->json($info, 200);
 
     }
+
+    // get multiple products by a list of IDS
+    public function getProductByIds(Request $request) {
+
+        $products = $request->post('products');
+        $productsIds = isset($products) && strlen(trim($products)) > 0 ? explode(',', $products) : [];
+
+        if (count($productsIds) <= 0) response(400);
+        
+        $products = Product::whereIn('id', $productsIds)->get();
+        return response()->json(['data' => $products]);
+
+    }
 }

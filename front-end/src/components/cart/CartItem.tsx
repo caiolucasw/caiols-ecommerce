@@ -1,19 +1,44 @@
 import { Box, Typography, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { CartItem as CartItemInterface } from "../../utils/types";
+import {
+  CartItem as CartItemInterface,
+  ProductInterface,
+} from "../../utils/types";
+import { useAppSelector } from "../../app/store";
 
 interface CartItemProps {
-  item: CartItemInterface;
+  item: CartItemInterface | (ProductInterface & { quantity?: number });
   updateQuantityProductCart: (
     productId: string,
     quantity: number,
     cartItemId: number
   ) => Promise<void>;
+  updateQuantityProductCartNotLogged: (
+    productId: string,
+    quantity: number
+  ) => void;
 }
-const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
+
+// Type guard to theck if the obj is of type CartItemInterface
+function isMyCartItemInterface(obj: any): obj is CartItemInterface {
+  return "cart_id" in obj;
+}
+// -----------------------------------------------------------------
+
+const CartItem = ({
+  item,
+  updateQuantityProductCart,
+  updateQuantityProductCartNotLogged,
+}: CartItemProps) => {
+  const user = useAppSelector((state) => state.user);
+  const isUserLoggedIn = !!user?.token;
+  const product = isMyCartItemInterface(item) ? item.product : item;
+  const quantity = isMyCartItemInterface(item)
+    ? item.quantity
+    : product?.quantity;
   const quantityNum =
-    typeof item.quantity === "string" ? Number(item.quantity) : item.quantity;
+    typeof quantity === "string" ? Number(item.quantity) : item.quantity || 0;
   return (
     <Box
       key={item.id}
@@ -40,11 +65,7 @@ const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
             }}
           >
             <img
-              src={
-                item.product && item.product.image_url
-                  ? item.product.image_url
-                  : ""
-              }
+              src={product && product.image_url ? product.image_url : ""}
               alt="product_image"
               width="180"
               height="180"
@@ -52,7 +73,7 @@ const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
           </Box>
           <Box flex={1} pt={{ xs: 0, sm: 4 }}>
             <Typography variant="subtitle1" fontWeight={600}>
-              {item.product && item.product.name ? item.product.name : ""}
+              {product && product.name ? product.name : ""}
             </Typography>
           </Box>
         </Box>
@@ -74,17 +95,28 @@ const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
                   sx={{
                     p: 0.5,
                     borderRadius: 0,
+                    ...(quantityNum <= 1 && { cursor: "not-allowed" }),
                     "&:hover": {
                       backgroundColor: "inherit",
                     },
                   }}
-                  onClick={() =>
-                    updateQuantityProductCart(
-                      item.product_id,
-                      quantityNum - 1,
-                      item.id
-                    )
-                  }
+                  onClick={() => {
+                    if (quantityNum > 0) {
+                      if (isUserLoggedIn) {
+                        updateQuantityProductCart(
+                          product.id,
+                          quantityNum - 1 || 0,
+                          item.id as number
+                        );
+                      } else {
+                        updateQuantityProductCartNotLogged(
+                          product.id,
+                          quantityNum - 1 || 0
+                        );
+                      }
+                    }
+                  }}
+                  disabled={quantityNum <= 1}
                 >
                   <RemoveIcon fontSize="small" />
                 </IconButton>
@@ -99,13 +131,20 @@ const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
                       backgroundColor: "inherit",
                     },
                   }}
-                  onClick={() =>
-                    updateQuantityProductCart(
-                      item.product_id,
-                      quantityNum + 1,
-                      item.id
-                    )
-                  }
+                  onClick={() => {
+                    if (isUserLoggedIn) {
+                      updateQuantityProductCart(
+                        product.id,
+                        quantityNum + 1,
+                        item.id as number
+                      );
+                    } else {
+                      updateQuantityProductCartNotLogged(
+                        product.id,
+                        quantityNum + 1 || 0
+                      );
+                    }
+                  }}
                 >
                   <AddIcon fontSize="small" />
                 </IconButton>
@@ -119,9 +158,13 @@ const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
                 textDecoration: "underline",
                 ml: 1,
               })}
-              onClick={() =>
-                updateQuantityProductCart(item.product_id, 0, item.id)
-              }
+              onClick={() => {
+                if (isUserLoggedIn) {
+                  updateQuantityProductCart(product.id, 0, item.id as number);
+                } else {
+                  updateQuantityProductCartNotLogged(product.id, 0);
+                }
+              }}
             >
               Remover
             </Typography>
@@ -136,8 +179,8 @@ const CartItem = ({ item, updateQuantityProductCart }: CartItemProps) => {
             <Box>
               <Typography variant="subtitle2" fontWeight={700}>
                 {"R$ "}
-                {item.product && item.product.price
-                  ? item.product.price.toLocaleString("pt-BR", {
+                {product && product.price
+                  ? product.price.toLocaleString("pt-BR", {
                       maximumFractionDigits: 2,
                       minimumFractionDigits: 2,
                     })

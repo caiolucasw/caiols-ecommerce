@@ -11,7 +11,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PaymentPage from "../stripe/PaymentPage";
 import CartCheckout from "../checkout/CartCheckout";
 import axiosApp from "../../customAxios";
@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import { Cart, CartItem as CartItemInterface } from "../../utils/types";
 import { updateCartCount } from "../../app/userSlice";
 import CartAddresses from "../checkout/CartAddresses";
+import { getCartItemLS } from "../../utils/usefulMethods";
 
 const steps = [
   {
@@ -52,6 +53,8 @@ const CheckoutPage = () => {
   const cartItems = cart?.cart_items || null;
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  let fromCartBuy = !!location?.state?.cartBuy;
 
   const totalSteps = () => {
     return steps.length;
@@ -83,20 +86,23 @@ const CheckoutPage = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
-
-  const handleComplete = () => {
-    const newCompleted = completed;
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-    handleNext();
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
+  const addCartItemsFromLS = async () => {
+    setLoading(true);
+    const productItems = getCartItemLS();
+    try {
+      const res = await axiosApp.post("/cart/products/cart-not-logged", {
+        products: productItems,
+        removeCurrent: 1,
+      });
+      if (res && res.status === 200) {
+        setCart(res.data.data);
+        localStorage.removeItem("cart_items");
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
 
   const getCartItems = async () => {
@@ -190,7 +196,15 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    if (user.token) getCartItems();
+    if (user.token) {
+      if (fromCartBuy) {
+        // add cart items (from localStorage) because the user was not logged in
+        addCartItemsFromLS();
+      } else {
+        history.replaceState({}, "");
+        getCartItems();
+      }
+    }
   }, [user]);
 
   // recalculate total

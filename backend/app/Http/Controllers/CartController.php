@@ -8,6 +8,7 @@ use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -84,6 +85,46 @@ class CartController extends Controller
         CartItem::where('cart_id', '=', $cartId)->delete();
 
         return response()->json(["message" => "success"], 200);
+
+    }
+
+    // Insert or update items in cart if the user was not logged in when the he/she added the items
+    public function insertMultipleItemsFromCartNotLogged(Request $request) {
+        $products = $request->post('products');
+        $removeCurrent = $request->post('removeCurrent');
+        
+        $userId = auth()->user()->id;
+        $cart = Cart::firstOrCreate(['user_id' => $userId]);
+        $cartItemsCount = 0;
+
+        // remove all items from current cart
+        if (isset($removeCurrent) && $removeCurrent == 1) {
+            CartItem::where('user_id', '=', $userId)->delete();
+        }
+        // --------------------------------
+
+        if (!$cart) return response()->json(['message' => 'error']);
+
+        // add or update products
+        foreach($products as $product) {
+            if ($product['quantity'] > 0) {
+                $cartItem = ['cart_id' => $cart->id, 'product_id' => $product['product'], 'quantity' => $product['quantity']];
+                CartItem::updateOrCreate(
+                    ['cart_id' => $cartItem['cart_id'], 'product_id' => $cartItem['product_id']],
+                    ['quantity' =>  DB::raw("IFNULL(quantity,0) + {$cartItem['quantity']}")] // update quantity 
+
+                );
+            }
+        }
+
+        // get all cart items
+        $cart = Cart::with('cart_items.product')->firstOrCreate(['user_id' => $userId]);
+
+        // get cart_items count
+        $cartAux = Cart::where('user_id', '=', $userId)->withSum('cart_items', 'quantity')->first();
+        $cartItemsCount = isset($cartAux, $cartAux->cart_items_sum_quantity) ? $cartAux->cart_items_sum_quantity : 0;
+
+        return response()->json(['data' => $cart, 'cart_items_count' => $cartItemsCount]);
 
     }
 }

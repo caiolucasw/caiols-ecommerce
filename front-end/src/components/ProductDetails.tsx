@@ -15,6 +15,7 @@ import { ProductInterface } from "../utils/types";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { updateCartCount } from "../app/userSlice";
 import { toast } from "react-toastify";
+import { updateQuantityProductsLocalStorage } from "../utils/user";
 
 interface ItemInfoInterface {
   quantity: string;
@@ -31,6 +32,7 @@ const ProductDetails = () => {
   const [itemInfo, setItemInfo] = useState<ItemInfoInterface>({
     quantity: "1",
   });
+  const quantityNum = Number(itemInfo.quantity);
 
   const getProductById = async (id: string) => {
     try {
@@ -42,6 +44,13 @@ const ProductDetails = () => {
       console.log(err);
       navigate("/");
     }
+  };
+
+  // add product to cart when the user is not logged (localStorage)
+  const addProductCartNotLogged = (id: string, quantity: number) => {
+    const cartCount = updateQuantityProductsLocalStorage(id, quantity);
+    dispatch(updateCartCount(cartCount));
+    toast.success("Item adicionado ao carrinho!");
   };
 
   const addProductCart = async (id: string, quantity: string) => {
@@ -66,9 +75,7 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
-    if (productId) {
-      getProductById(productId);
-    }
+    if (productId) getProductById(productId);
   }, [location]);
 
   if (!productId) {
@@ -149,7 +156,11 @@ const ProductDetails = () => {
                 color="inherit"
                 fullWidth
                 onClick={() => {
-                  addProductCart(productId, itemInfo.quantity);
+                  if (user.token) {
+                    addProductCart(productId, itemInfo.quantity);
+                  } else {
+                    addProductCartNotLogged(productId, quantityNum);
+                  }
                 }}
               >
                 Adicionar ao carrinho

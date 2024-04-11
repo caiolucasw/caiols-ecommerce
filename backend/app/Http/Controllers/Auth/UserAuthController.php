@@ -26,8 +26,15 @@ class UserAuthController extends Controller
         $user = User::create($data);
 
         $token = $user->createToken('API Token')->accessToken;
+        $user = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'type' => $user->type,
+            'token' => $token
+        ];
 
-        return response(['user' => $user, 'token' => $token]);
+        return response()->json($user, 201);
     }
 
     public function login(Request $request)

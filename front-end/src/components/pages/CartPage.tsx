@@ -9,19 +9,50 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useEffect, useState } from "react";
 import axiosApp from "../../customAxios";
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import { Cart, CartItem as CartItemInterface } from "../../utils/types";
+import {
+  CartItem as CartItemInterface,
+  CartItemNotLogged,
+  ProductInterface,
+} from "../../utils/types";
 import { updateCartCount } from "../../app/userSlice";
 import { useNavigate } from "react-router-dom";
 import CartList from "../cart/CartList";
+import { updateQuantityProductsLocalStorage } from "../../utils/user";
+import { getCartItemLS } from "../../utils/usefulMethods";
 
 const CartPage = () => {
-  const [cart, setCart] = useState<Cart | null>(null);
+  const [cart, setCart] = useState<any>(null);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const cartItems = cart?.cart_items || null;
   const user = useAppSelector((state) => state.user);
+  const isUserLoggedIn = !!user.token;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  // get cart items products from multiple products_ids passed to the request body
+  const getCartItemsProducts = async (products: CartItemNotLogged[]) => {
+    setLoading(true);
+    const product_ids = products.map((item) => item.product).join(",");
+    try {
+      const res = await axiosApp.post("/products/ids", {
+        products: product_ids,
+      });
+
+      if (res && res.status === 200) {
+        const productsData = (res?.data?.data as ProductInterface[]) || [];
+        const cartItemsAux = productsData.map((prod) => {
+          const index = products.findIndex((p) => p.product === prod.id);
+          return { ...prod, quantity: products[index].quantity };
+        });
+        setCart({ cart_items: cartItemsAux });
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
 
   const getCartItems = async () => {
     setLoading(true);
@@ -39,23 +70,22 @@ const CartPage = () => {
   };
 
   const getTotalPrice = (
-    cartItems: CartItemInterface[]
+    cartItems: (CartItemInterface & { price?: number })[]
   ): number | undefined => {
     if (!cartItems || cartItems.length <= 0) {
       setTotal(0);
       return;
     }
-
     setTotal(
       cartItems.reduce((acc, curr) => {
-        acc += curr.quantity * curr.product.price;
+        acc += curr.quantity * (curr?.product?.price || curr?.price || 0);
         return acc;
       }, 0)
     );
   };
 
   const updateItemQuantityState = (
-    itemId: number,
+    itemId: number | string,
     quantity: number,
     totalQuantity: number
   ) => {
@@ -74,7 +104,7 @@ const CartPage = () => {
       cartItemsAux[itemIndex].quantity = quantity;
     }
 
-    setCart((curr) => {
+    setCart((curr: any) => {
       if (curr) {
         return {
           ...curr,
@@ -86,6 +116,48 @@ const CartPage = () => {
     });
 
     dispatch(updateCartCount(totalQuantity));
+  };
+
+  const updateCartItemsNotLogged = (itemId: string, quantity: number) => {
+    const cartItemsAux = updateItemQuantityStateNotLogged(itemId, quantity);
+
+    setCart((curr: any) => {
+      if (curr) {
+        return {
+          ...curr,
+          cart_items: [...(cartItemsAux as any[])],
+        };
+      } else {
+        return null;
+      }
+    });
+
+    const cartCount =
+      cartItemsAux?.reduce((acc, value) => acc + value.quantity, 0) || 0;
+    dispatch(updateCartCount(cartCount));
+  };
+  const updateItemQuantityStateNotLogged = (
+    itemId: string,
+    quantity: number
+  ) => {
+    console.log(quantity);
+    if (!cartItems) return;
+
+    let cartItemsAux = [...cartItems];
+
+    // Remove item from cart
+    if (quantity <= 0) {
+      cartItemsAux = cartItemsAux.filter((item) => item.id !== itemId);
+    } else {
+      // Update quantity
+      const itemIndex = cartItemsAux.findIndex((item) => item.id === itemId);
+      if (itemIndex === -1) return;
+
+      cartItemsAux[itemIndex].quantity = quantity;
+    }
+
+    updateQuantityProductsLocalStorage(itemId, quantity);
+    return cartItemsAux;
   };
 
   const updateQuantityProductCart = async (
@@ -112,6 +184,13 @@ const CartPage = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (!user.token) {
+      const cartItemsLS = getCartItemLS();
+      getCartItemsProducts(cartItemsLS);
+    }
+  }, []);
 
   useEffect(() => {
     if (user.token) getCartItems();
@@ -154,6 +233,7 @@ const CartPage = () => {
           <CartList
             cartItems={cartItems}
             updateQuantityProductCart={updateQuantityProductCart}
+            updateQuantityProductCartNotLogged={updateCartItemsNotLogged}
           />
         )}
 
@@ -207,7 +287,13 @@ const CartPage = () => {
                   </Box>
                   <Button
                     variant="contained"
-                    onClick={() => navigate("/checkout")}
+                    onClick={() => {
+                      if (isUserLoggedIn) {
+                        navigate("/checkout");
+                      } else {
+                        navigate("/login", { state: { cartBuy: 1 } });
+                      }
+                    }}
                   >
                     Comprar
                   </Button>

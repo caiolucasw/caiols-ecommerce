@@ -1,12 +1,81 @@
+// @ts-ignore
+import InputMask from "react-input-mask";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import InputMask from "react-input-mask";
-import { Link as RouteLink, useNavigate } from "react-router-dom";
+import { Link as RouteLink, useLocation, useNavigate } from "react-router-dom";
 import { validateCpf } from "../../utils/validateCpf";
+import { getCartItemLS } from "../../utils/usefulMethods";
+import axiosApp from "../../customAxios";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/store";
+import { setUser, updateCartCount } from "../../app/userSlice";
+
+interface SignupValues {
+  name: string;
+  email: string;
+  cpf: string;
+  password: string;
+  repeat_password: string;
+}
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.user.token);
+  const location = useLocation();
+  const fromCartBuy = !!location?.state?.cartBuy;
+
+  const handleSignup = async (values: SignupValues) => {
+    try {
+      setLoading(true);
+      const res = await axiosApp.post("/register", values);
+
+      if (res && res.status === 201) {
+        if (!fromCartBuy) addCartItemsFromLSIfNecessary();
+        dispatch(setUser(res.data));
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+  // add cart items if the user has some products in localStorage
+  const addCartItemsFromLSIfNecessary = async () => {
+    // check if I need to add
+    const productItems = getCartItemLS();
+    if (productItems.length <= 0) return;
+
+    setLoading(true);
+    try {
+      const res = await axiosApp.post("/cart/products/cart-not-logged", {
+        products: productItems,
+      });
+      if (res && res.status === 200) {
+        localStorage.removeItem("cart_items");
+        if (res?.data?.cart_items_count) {
+          dispatch(updateCartCount(res.data.cart_items_count));
+        }
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fromCartBuy;
+    if (token && !fromCartBuy) {
+      navigate("/");
+    } else if (token && fromCartBuy) {
+      // pass state to identify if it needs to add cart_items when the login is complete
+      navigate("/checkout", { state: { cartBuy: location?.state?.cartBuy } });
+    }
+  }, [token]);
+
   return (
     <Box
       display="flex"
@@ -105,7 +174,7 @@ const Signup = () => {
                 .oneOf([Yup.ref("password")], "Senhas não são iguais")
                 .required("Campo obrigatório"),
             })}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) => handleSignup(values)}
           >
             {({
               handleSubmit,
@@ -212,6 +281,7 @@ const Signup = () => {
                       variant="contained"
                       color="primary"
                       fullWidth
+                      disabled={loading}
                       sx={{ fontWeight: 700 }}
                     >
                       CADASTRAR

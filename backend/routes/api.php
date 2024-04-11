@@ -33,6 +33,7 @@ Route::post('/login', [UserAuthController::class, 'login']);
 Route::get('/products', [ProductController::class, 'get']);
 Route::get('/products/filters', [ProductController::class, 'getFilters']);
 Route::get('/products/{id}', [ProductController::class, 'findById']);
+Route::post('/products/ids', [ProductController::class, 'getProductByIds']);
 
 Route::get('/categories/products_count', [CategoryController::class, 'getCategoriesProductsCount']);
 Route::get('/brands/products_count', [BrandController::class, 'getBrandsProductsCount']);
@@ -54,6 +55,7 @@ Route::middleware('auth:api')->group(function() {
 
     Route::get('/cart', [CartController::class, 'get']); // put this into auth:api routes afterwards
     Route::post('/cart/products', [CartController::class, 'insertItem']);
+    Route::post('/cart/products/cart-not-logged', [CartController::class, 'insertMultipleItemsFromCartNotLogged']);
     Route::post('/payment-intent/{cart_id}', [PaymentController::class, 'paymentIntent']);
     Route::post('/cart/buy/{id}', [CartController::class, 'buy']);
 

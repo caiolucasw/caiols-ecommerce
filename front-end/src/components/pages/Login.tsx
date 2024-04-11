@@ -1,18 +1,45 @@
 import { Alert, Box, Button, Link, TextField, Typography } from "@mui/material";
-import { Link as RouteLink, useNavigate } from "react-router-dom";
+import { Link as RouteLink, useLocation, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import axiosApp from "../../customAxios";
 import { useEffect, useState } from "react";
-import { setUser } from "../../app/userSlice";
+import { setUser, updateCartCount } from "../../app/userSlice";
+import { getCartItemLS } from "../../utils/usefulMethods";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.user.token);
+  const location = useLocation();
+  const fromCartBuy = !!location?.state?.cartBuy;
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // add cart items if the user has some products in localStorage
+  const addCartItemsFromLSIfNecessary = async () => {
+    // check if I need to add
+    const productItems = getCartItemLS();
+    if (productItems.length <= 0) return;
+
+    setLoading(true);
+    try {
+      const res = await axiosApp.post("/cart/products/cart-not-logged", {
+        products: productItems,
+      });
+      if (res && res.status === 200) {
+        localStorage.removeItem("cart_items");
+        if (res?.data?.cart_items_count) {
+          dispatch(updateCartCount(res.data.cart_items_count));
+        }
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
@@ -20,6 +47,7 @@ const Login = () => {
       const res = await axiosApp.post("/login", values);
 
       if (res && res.status === 200) {
+        if (!fromCartBuy) addCartItemsFromLSIfNecessary();
         dispatch(setUser(res.data));
       }
       setLoading(false);
@@ -31,8 +59,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (token) {
+    fromCartBuy;
+    if (token && !fromCartBuy) {
       navigate("/");
+    } else if (token && fromCartBuy) {
+      // pass state to identify if it needs to add cart_items when the login is complete
+      navigate("/checkout", { state: { cartBuy: location?.state?.cartBuy } });
     }
   }, [token]);
 

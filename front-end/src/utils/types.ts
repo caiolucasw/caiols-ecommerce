@@ -32,6 +32,7 @@ export interface ProductInterface {
   category?: CategoryInterface;
   brand?: BrandInterface;
   product_images?: ProductImage[];
+  quantity?: number;
 }
 
 export interface FetchProductsInterface {
@@ -61,6 +62,11 @@ export interface CartItem {
   created_at: string | null;
   updated_at: string | null;
   product: ProductInterface;
+}
+
+export interface CartItemNotLogged {
+  product: string;
+  quantity: number;
 }
 
 export interface Cart {
@@ -106,4 +112,11 @@ export interface OrderItem {
   updated_at?: string;
   created_at?: string;
   invoice_id?: string;
+}
+
+export type ProductExtendedInterface = ProductInterface & { quantity: number };
+
+export interface CartItemLS {
+  product: string;
+  quantity: number;
 }

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axiosApp from "../customAxios";
+import { getCartItemLS } from "../utils/usefulMethods";
 
 export interface UserState {
   name: string;
@@ -101,10 +102,14 @@ export const userSlice = createSlice({
       if (action.payload) {
         const token = localStorage.getItem("token");
         state = { ...state, ...action.payload, token, loading: false };
-        return state;
       } else {
         localStorage.removeItem("token");
-        state = { ...state, loading: false };
+        const cartItemsLS = getCartItemLS(); // calculate quantity cart items from localStorage if  user is  not logged
+        const productsCount = cartItemsLS.reduce(
+          (acc, item) => acc + item.quantity,
+          0
+        );
+        state = { ...state, cart_items_count: productsCount, loading: false };
       }
 
       return state;
