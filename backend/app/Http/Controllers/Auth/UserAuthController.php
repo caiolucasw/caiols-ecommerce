@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Passport\Token;
@@ -16,7 +17,8 @@ class UserAuthController extends Controller
         $data = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
+            'password' => 'required|min:6',
+            'repeat_password' => 'required|same:password',
             'cpf' => 'required|max:11|min:11|unique:users'
         ]);
 
@@ -26,6 +28,8 @@ class UserAuthController extends Controller
         $user = User::create($data);
 
         $token = $user->createToken('API Token')->accessToken;
+        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+
         $user = [
             'id' => $user->id,
             'name' => $user->name,
@@ -61,9 +65,14 @@ class UserAuthController extends Controller
                 'type' => $user->type,
                 'token' => $token
             ];
-            $cart = Cart::firstOrCreate(['user_id' => $user])->withSum('cart_items', 'quantity')->first();
+            $cart = Cart::firstOrCreate(['user_id' => $user['id']]);
 
-            $user['cart_items_count'] = isset($cart, $cart->cart_items_sum_quantity) ? $cart->cart_items_sum_quantity : 0;
+            if ($cart) {
+                $cartItemsCount = CartItem::where('cart_id', '=', $cart->id)->sum('quantity');
+                $cartItemsCount = $cartItemsCount ? $cartItemsCount : 0;
+                $user['cart_items_count'] = $cartItemsCount;
+            }
+
 
             return response()->json($user);
         } else {
@@ -97,9 +106,13 @@ class UserAuthController extends Controller
                 'type' => $user->type,
             ];
 
-            $cart = Cart::firstOrCreate(['user_id' => $user])->withSum('cart_items', 'quantity')->first();
+            $cart = Cart::firstOrCreate(['user_id' => $user['id']]);
 
-            $user['cart_items_count'] = isset($cart, $cart->cart_items_sum_quantity) ? $cart->cart_items_sum_quantity : 0;
+            if ($cart) {
+                $cartItemsCount = CartItem::where('cart_id', '=', $cart->id)->sum('quantity');
+                $cartItemsCount = $cartItemsCount ? $cartItemsCount : 0;
+                $user['cart_items_count'] = $cartItemsCount;
+            }
 
             return response()->json($user, 200);
             

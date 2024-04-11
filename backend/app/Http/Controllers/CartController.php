@@ -23,8 +23,8 @@ class CartController extends Controller
     }
 
     public function insertItem(Request $request) {
-        $productId = $request->get('product');
-        $quantity = $request->get('quantity');
+        $productId = $request->post('product');
+        $quantity = $request->post('quantity');
         
         $user = auth()->user();
         $userId = $user->id;
@@ -32,17 +32,21 @@ class CartController extends Controller
         $cartItem = null;
         $cartItemsCount = 0;
 
+
         if ($cart) {
             // if quantity <= 0, delete the cartItem 
             if ($quantity <= 0) {
                 $cartItem = CartItem::where(['cart_id' => $cart->id, 'product_id' => $productId])->delete();
             } else {
-                $cartItem = CartItem::updateOrInsert(['cart_id' => $cart->id, 'product_id' => $productId], ['quantity' => $quantity]);
+                $cartItem = CartItem::updateOrCreate(
+                    ['cart_id' => $cart->id, 'product_id' => $productId],
+                    ['quantity' =>  DB::raw("IFNULL(quantity,0) + {$quantity}")] // update quantity 
+                );
+
             }
+            $cartItemsCount = CartItem::where('cart_id', '=', $cart->id)->sum('quantity');
 
-            $cartAux = Cart::firstOrCreate(['user_id' => $userId])->withSum('cart_items', 'quantity')->first();
-
-            $cartItemsCount = isset($cartAux, $cartAux->cart_items_sum_quantity) ? $cartAux->cart_items_sum_quantity : 0;
+            $cartItemsCount = $cartItemsCount ? $cartItemsCount : 0;
 
         } else {
             response()->json(['message' => 'error']);

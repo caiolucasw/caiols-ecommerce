@@ -28,9 +28,13 @@ const Signup = () => {
   const fromCartBuy = !!location?.state?.cartBuy;
 
   const handleSignup = async (values: SignupValues) => {
+    const formattedValues = {
+      ...values,
+      cpf: values.cpf.replace(/[^0-9]/g, ""),
+    };
     try {
       setLoading(true);
-      const res = await axiosApp.post("/register", values);
+      const res = await axiosApp.post("/register", formattedValues);
 
       if (res && res.status === 201) {
         if (!fromCartBuy) addCartItemsFromLSIfNecessary();

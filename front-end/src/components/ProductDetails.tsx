@@ -53,7 +53,11 @@ const ProductDetails = () => {
     toast.success("Item adicionado ao carrinho!");
   };
 
-  const addProductCart = async (id: string, quantity: string) => {
+  const addProductCart = async (
+    id: string,
+    quantity: string,
+    buy?: boolean
+  ) => {
     try {
       const response = await axiosApp.post("/cart/products", {
         product: id,
@@ -67,7 +71,11 @@ const ProductDetails = () => {
             : 0
           : 0;
         dispatch(updateCartCount(cartItemCount));
-        toast.success("Item adicionado ao carrinho!");
+        if (buy) {
+          navigate("/checkout");
+        } else {
+          toast.success("Item adicionado ao carrinho!");
+        }
       }
     } catch (err) {
       console.log(err);
@@ -145,7 +153,9 @@ const ProductDetails = () => {
                 variant="contained"
                 color="primary"
                 fullWidth
-                onClick={() => navigate("/pagamento")}
+                onClick={() => {
+                  addProductCart(productId, itemInfo.quantity, true);
+                }}
               >
                 Comprar
               </Button>
