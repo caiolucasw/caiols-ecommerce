@@ -40,7 +40,7 @@ class CartController extends Controller
             } else {
                 $cartItem = CartItem::updateOrCreate(
                     ['cart_id' => $cart->id, 'product_id' => $productId],
-                    ['quantity' =>  DB::raw("IFNULL(quantity,0) + {$quantity}")] // update quantity 
+                    ['quantity' =>  $quantity] // update quantity 
                 );
 
             }

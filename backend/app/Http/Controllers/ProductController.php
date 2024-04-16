@@ -59,42 +59,26 @@ class ProductController extends Controller
 
     public function insert(Request $request) {
 
+      $images = $request->file('images');
       $newProduct = $request->all();
-      $images = isset($newProduct['images_url']) ? $newProduct['images_url'] : NULL;
 
       // it doesn't allow request without the images_url field
       if (is_null($images) || !is_array($images) || count($images) <= 0) return response("Insert images for the product", 400);
       
-      # Remove empty urls
-      $images_filter = array_filter($images, function($image) {
-        return !empty(trim($image));
-      });
-
-      if (count($images_filter) <= 0) return response("Insert images for the product", 400);
-
-      // Main Image
-      $newProduct['image_url'] = $images_filter[0];
-      unset($newProduct['images_url']);
 
       $newProduct['brand_id'] = $newProduct['brand'];
       $newProduct['category_id'] = $newProduct['category'];
 
-      // map to new array to map new ProductImages
-      $images_map = array_map(function($image) {
-        $productImage = new ProductImages();
-        $productImage->image_name = Str::uuid().time();
-        $productImage->image_url = $image;
-        return $productImage;
-      }, $images_filter);
-        
-
       // create new product
       $newProduct['id'] = Str::uuid();
       $product = new Product();
+      $productImages = ProductImages::storeMultipleAWS($images);
+      if (is_null($productImages) || !is_array($productImages) || count($productImages) <= 0) return response("Error", 400);
+      $newProduct['image_url'] = $productImages[0]->image_url;
       $productAdded = $product->create($newProduct);
 
       // add product images
-      $productAdded->product_images()->saveMany($images_map);
+      $productAdded->product_images()->saveMany($productImages);
 
       return response()->json($productAdded, 201);
     }

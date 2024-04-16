@@ -11,6 +11,7 @@
         "laravel/passport": "^11.8",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "league/flysystem-aws-s3-v3": "^3.27",
         "stripe/stripe-php": "^13.11"
     },
     "require-dev": {
