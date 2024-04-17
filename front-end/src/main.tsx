@@ -27,6 +27,7 @@ import CartPage from "./components/pages/CartPage.tsx";
 import CheckoutPage from "./components/pages/CheckoutPage.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import OrderSuccess from "./components/order/OrderSuccess.tsx";
 import AdminPage from "./components/AdminPage.tsx";
 import AllowAdminPage from "./components/admin/AllowAdminPage.tsx";
