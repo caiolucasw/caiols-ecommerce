@@ -34,7 +34,7 @@ const SearchInput = () => {
       }}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          if (pathName) navigate("/", { state: { productName: true } });
+          if (pathName) navigate("/", { state: { productName: state.name } });
           else {
             dispatch(
               fetchProducts({

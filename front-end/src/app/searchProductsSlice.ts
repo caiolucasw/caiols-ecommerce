@@ -199,8 +199,9 @@ export const searchProductsSlice = createSlice({
       return state;
     },
 
-    clearSearchProducts: (state) => {
-      state = initialState;
+    clearSearchProducts: (state, action: PayloadAction<boolean>) => {
+      const clearName = !action.payload;
+      state = { ...initialState, name: clearName ? "" : state.name };
       return state;
     },
     // ---------------

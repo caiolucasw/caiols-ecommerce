@@ -8,11 +8,12 @@ import { useLocation } from "react-router-dom";
 
 const ListProductsContainer = ({ category }: { category?: string }) => {
   const { state } = useLocation();
-  const hasProductName = state?.productName || null; // if the request was made through the input with product name
+  const productName = state?.productName || null; // if the request was made through the input with product name
+  const hasProductName = !productName;
   const dispatch = useAppDispatch();
   const firstRender = useRef(true);
   const filters = useAppSelector((state) => state.searchProducts.filters);
-  const productName = useAppSelector((state) => state.searchProducts.name);
+  // const productName = useAppSelector((state) => state.searchProducts.name);
   const products = useAppSelector(
     (state: RootState) => state.searchProducts.products
   );
@@ -20,20 +21,20 @@ const ListProductsContainer = ({ category }: { category?: string }) => {
     (state: RootState) => state.searchProducts.loading
   );
 
-  const moreFields = { name: productName, categoryName: category };
+  const moreFields = {
+    name: productName,
+    categoryName: category,
+  };
 
   useEffect(() => {
     return () => {
-      dispatch(clearSearchProducts());
+      dispatch(clearSearchProducts(hasProductName));
     };
   }, []);
 
   useEffect(() => {
-    const values = firstRender.current
-      ? hasProductName
-        ? moreFields
-        : { categoryName: category || "" }
-      : { ...filters, ...moreFields };
+    // prettier-ignore
+    const values = firstRender.current ? (hasProductName ? moreFields: { categoryName: category || "" }) : { ...filters, ...moreFields };
 
     // @ts-ignore
     dispatch(fetchProducts(values));
