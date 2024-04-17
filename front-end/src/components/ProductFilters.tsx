@@ -10,6 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import { useEffect, useState } from "react";
 import {
   setBrand,
@@ -204,18 +205,69 @@ const ProductFilters = ({ category }: { category?: string }) => {
             <Divider sx={{ marginTop: 1, marginBottom: 2 }} />
             {location && location.pathname === "/" && (
               <>
-                <Typography variant="subtitle1" fontWeight={700}>
+                <Typography variant="subtitle1" fontWeight={700} mb={2}>
                   Categorias
                 </Typography>
-                <Box display="flex" flexDirection="column" gap={1} p={2} pt={1}>
-                  {categories.map((category) => (
+                <PerfectScrollbar>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    gap={1}
+                    p={2}
+                    pt={1}
+                    maxHeight={200}
+                  >
+                    {categories.map((category) => (
+                      <FormControlLabel
+                        key={category.id}
+                        control={
+                          <Checkbox
+                            checked={
+                              !!selectedCategories[category.id] &&
+                              category.id === selectedCategories[category.id].id
+                            }
+                            sx={{
+                              "&.Mui-checked": {
+                                color: "#70e000",
+                              },
+                            }}
+                            onChange={(event) => {
+                              if (event.target.checked) addCategory(category);
+                              else removeCategory(category);
+                            }}
+                          />
+                        }
+                        label={`${category.label} (${category.products_count})`}
+                        sx={{ whiteSpace: "nowrap" }}
+                      />
+                    ))}
+                  </Box>
+                </PerfectScrollbar>
+              </>
+            )}
+
+            <Divider sx={{ marginBottom: 2 }} />
+            <Typography variant="subtitle1" fontWeight={700} mb={2}>
+              Marcas
+            </Typography>
+            <Box>
+              <PerfectScrollbar>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={1}
+                  p={2}
+                  pt={1}
+                  maxHeight={220}
+                >
+                  {brands.map((brand) => (
                     <FormControlLabel
-                      key={category.id}
+                      key={brand.id}
                       control={
                         <Checkbox
                           checked={
-                            !!selectedCategories[category.id] &&
-                            category.id === selectedCategories[category.id].id
+                            !!selectedBrands[brand.id] &&
+                            brand.id === selectedBrands[brand.id].id
                           }
                           sx={{
                             "&.Mui-checked": {
@@ -223,48 +275,17 @@ const ProductFilters = ({ category }: { category?: string }) => {
                             },
                           }}
                           onChange={(event) => {
-                            if (event.target.checked) addCategory(category);
-                            else removeCategory(category);
+                            if (event.target.checked) addBrand(brand);
+                            else removeBrand(brand);
                           }}
                         />
                       }
-                      label={`${category.label} (${category.products_count})`}
+                      label={`${brand.name} (${brand.products_count})`}
                       sx={{ whiteSpace: "nowrap" }}
                     />
                   ))}
                 </Box>
-              </>
-            )}
-
-            <Divider sx={{ marginBottom: 2 }} />
-            <Typography variant="subtitle1" fontWeight={700}>
-              Marcas
-            </Typography>
-            <Box display="flex" flexDirection="column" gap={1} p={2} pt={1}>
-              {brands.map((brand) => (
-                <FormControlLabel
-                  key={brand.id}
-                  control={
-                    <Checkbox
-                      checked={
-                        !!selectedBrands[brand.id] &&
-                        brand.id === selectedBrands[brand.id].id
-                      }
-                      sx={{
-                        "&.Mui-checked": {
-                          color: "#70e000",
-                        },
-                      }}
-                      onChange={(event) => {
-                        if (event.target.checked) addBrand(brand);
-                        else removeBrand(brand);
-                      }}
-                    />
-                  }
-                  label={`${brand.name} (${brand.products_count})`}
-                  sx={{ whiteSpace: "nowrap" }}
-                />
-              ))}
+              </PerfectScrollbar>
             </Box>
           </CardContent>
         </Card>
