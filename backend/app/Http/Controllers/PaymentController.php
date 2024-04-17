@@ -20,11 +20,11 @@ class PaymentController extends Controller
             return response(404);
         }
 
-        $total = $cart->getTotal();
+        $total = $cart->getTotal()*100; // in cents;
 
         if ($total <= 0) return response('Empty Cart', 404);
 
-        $stripe = new StripeClient('sk_test_51IXRdQECw79QhUt2VScVHNu27Cyy9xTeN4PIZX6Q93DZ7P2HUUyj79tlC6W3vZs4iuIOFxThQvCiLsvpKMfyLr1q00oHufRGM1');
+        $stripe = new StripeClient(env('STRIPE_API_KEY'));
         $paymentIntent = $stripe->paymentIntents->create([
             'amount' => $total,
             'currency' => 'brl',

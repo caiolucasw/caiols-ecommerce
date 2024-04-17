@@ -14,7 +14,7 @@ interface CartItemProps {
     quantity: number,
     cartItemId: number
   ) => Promise<void>;
-  updateQuantityProductCartNotLogged: (
+  updateQuantityProductCartNotLogged?: (
     productId: string,
     quantity: number
   ) => void;
@@ -107,7 +107,7 @@ const CartItem = ({
                           quantityNum - 1 || 0,
                           item.id as number
                         );
-                      } else {
+                      } else if (updateQuantityProductCartNotLogged) {
                         updateQuantityProductCartNotLogged(
                           product.id,
                           quantityNum - 1 || 0
@@ -137,7 +137,7 @@ const CartItem = ({
                         quantityNum + 1,
                         item.id as number
                       );
-                    } else {
+                    } else if (updateQuantityProductCartNotLogged) {
                       updateQuantityProductCartNotLogged(
                         product.id,
                         quantityNum + 1 || 0
@@ -160,7 +160,7 @@ const CartItem = ({
               onClick={() => {
                 if (isUserLoggedIn) {
                   updateQuantityProductCart(product.id, 0, item.id as number);
-                } else {
+                } else if (updateQuantityProductCartNotLogged) {
                   updateQuantityProductCartNotLogged(product.id, 0);
                 }
               }}

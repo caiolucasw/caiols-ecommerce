@@ -95,10 +95,10 @@ const FormAddressCheckout = ({
           city: Yup.string().required(requiredMessage).max(255),
         })}
         onSubmit={(values) => {
-          if (type === "add") {
+          if (type === "add" || !type) {
             addAddress(values);
           } else if (type === "update") {
-            updateAddress(address?.id, values);
+            updateAddress(initialAddress?.id, values);
           }
         }}
       >

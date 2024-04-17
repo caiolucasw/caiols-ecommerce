@@ -279,6 +279,7 @@ const CheckoutPage = () => {
           <Box mt={3} display="flex" flexDirection="column" flex={1}>
             {steps.map((step) => (
               <Box
+                key={step.id}
                 sx={{
                   p: 2,
                   border: "1px solid #ccc",

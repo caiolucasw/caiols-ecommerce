@@ -9,7 +9,7 @@ interface CartCheckoutProps {
     quantity: number,
     cartItemId: number
   ) => Promise<void>;
-  updateQuantityProductCartNotLogged: (
+  updateQuantityProductCartNotLogged?: (
     productId: string,
     quantity: number
   ) => void;

@@ -3,7 +3,8 @@ import { getCartItemLS } from "./usefulMethods";
 // method to update the quantity of a cart_item in localStorage
 export const updateQuantityProductsLocalStorage = (
   productId: string,
-  quantity: number
+  quantity: number,
+  increment?: boolean
 ) => {
   const newItem = { product: productId, quantity: quantity };
   let cartItems = getCartItemLS();
@@ -15,7 +16,7 @@ export const updateQuantityProductsLocalStorage = (
     if (quantity > 1) {
       cartItems[indexEl] = {
         ...cartItems[indexEl],
-        quantity: quantity,
+        quantity: increment ? cartItems[indexEl].quantity + quantity : quantity,
       };
     } else {
       cartItems = cartItems.filter((item) => item.product !== productId);

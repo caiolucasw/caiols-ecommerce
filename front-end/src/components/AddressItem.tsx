@@ -28,7 +28,7 @@ const AddressItem = ({
   loading,
 }: AddressItemInterface) => {
   return (
-    <Box>
+    <Box px={2}>
       <Box display="flex" gap={4} alignItems="center">
         <Box>
           <PlaceIcon />

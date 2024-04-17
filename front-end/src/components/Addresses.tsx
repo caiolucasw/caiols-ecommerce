@@ -22,9 +22,7 @@ const customAddress = {
 
 const Addresses = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [openModal, setOpenModal] = useState<"add" | "update" | "remove" | "">(
-    ""
-  );
+  const [openModal, setOpenModal] = useState<string>("");
   const [addressSelected, setAddressSelected] = useState<Address | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
 

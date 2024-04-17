@@ -48,7 +48,7 @@ const ProductDetails = () => {
 
   // add product to cart when the user is not logged (localStorage)
   const addProductCartNotLogged = (id: string, quantity: number) => {
-    const cartCount = updateQuantityProductsLocalStorage(id, quantity);
+    const cartCount = updateQuantityProductsLocalStorage(id, quantity, true);
     dispatch(updateCartCount(cartCount));
     toast.success("Item adicionado ao carrinho!");
   };
@@ -193,12 +193,12 @@ const ProductDetails = () => {
             onChange={(e, value) => setCurrentTab(value)}
           >
             <Tab value="description" label="Descrição" />
-            <Tab value="details" label="Detalhes do Produto" />
+            {/* <Tab value="details" label="Detalhes do Produto" /> */}
           </Tabs>
 
           <Box p={2}>
             {currentTab === "description" && <Box>{product?.description}</Box>}
-            {currentTab === "details" && <Box>{product?.description}</Box>}
+            {/* {currentTab === "details" && <Box>{product?.description}</Box>} */}
           </Box>
         </Box>
       </Box>

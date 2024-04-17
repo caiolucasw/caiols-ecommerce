@@ -12,6 +12,7 @@ import AddressItem from "../AddressItem";
 import { toast } from "react-toastify";
 import FormAddressCheckout from "./FormAddressCheckout";
 import CloseIcon from "@mui/icons-material/Close";
+import ModalRemove from "../utils/ModalRemove";
 
 type modalType = "add" | "update" | "remove" | "";
 
@@ -31,8 +32,8 @@ const customAddress = {
 const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState<string | null>(null);
-  const [formType, setFormType] = useState<modalType>("");
   const [addressSelected, setAddressSelected] = useState<Address | null>(null);
+  const [openModal, setOpenModal] = useState<modalType>("");
   const hasDefaultAddress =
     addresses.filter((a) => a.default === 1).length == 1;
 
@@ -42,6 +43,10 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
       const res = await axiosApp.get("/address");
       if (res?.status === 200 && res?.data) {
         setAddresses(res.data);
+        if (!res.data || res.data.length <= 0) {
+          setAddressSelected(customAddress);
+          setOpenModal("add");
+        }
       }
       setLoading(null);
     } catch (err) {
@@ -77,6 +82,21 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
     }
   };
 
+  const removeAddress = async (addressId: number) => {
+    setLoading("removeAddresses");
+    try {
+      const res = await axiosApp.delete(`/address/${addressId}`);
+      if (res?.status === 200 && res?.data) {
+        getAddress();
+        setOpenModal("");
+      }
+      setLoading(null);
+    } catch (err) {
+      console.log(err);
+      setLoading(null);
+    }
+  };
+
   useEffect(() => {
     getAddress();
   }, []);
@@ -89,44 +109,45 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
         </Box>
       ) : (
         <>
-          {(formType === "add" || formType === "update") && addressSelected && (
-            <>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between	"
-              >
-                <Typography variant="subtitle1" fontWeight={700}>
-                  {formType === "add"
-                    ? "Adicionar endereço de Entrega"
-                    : "Editar endereço de Entrega"}
-                </Typography>
-                <IconButton
-                  onClick={() => setFormType("")}
-                  sx={{ color: "var(--primary-color)" }}
-                  title="Voltar"
+          {(openModal === "add" || openModal === "update") &&
+            addressSelected && (
+              <>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between	"
                 >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-              <FormAddressCheckout
-                onClose={() => {
-                  setFormType("");
-                  getAddress();
-                }}
-                type={formType}
-                address={addressSelected}
-              />
-            </>
-          )}
-          {!formType && (
+                  <Typography variant="subtitle1" fontWeight={700}>
+                    {openModal === "add" || !addresses || addresses.length <= 0
+                      ? "Adicionar endereço de Entrega"
+                      : "Editar endereço de Entrega"}
+                  </Typography>
+                  <IconButton
+                    onClick={() => setOpenModal("")}
+                    sx={{ color: "var(--primary-color)" }}
+                    title="Voltar"
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+                <FormAddressCheckout
+                  onClose={() => {
+                    setOpenModal("");
+                    getAddress();
+                  }}
+                  type={openModal}
+                  address={addressSelected || null}
+                />
+              </>
+            )}
+          {!openModal && (
             <>
               {addresses &&
                 addresses.map((address: Address) => (
                   <AddressItem
                     key={address.id}
                     address={address}
-                    setOpenModal={setFormType}
+                    setOpenModal={setOpenModal}
                     setAddressSelected={setAddressSelected}
                     handleChangeDefaultAddress={handleChangeDefaultAddress}
                     loading={loading}
@@ -138,7 +159,7 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
                   color="inherit"
                   onClick={() => {
                     setAddressSelected(customAddress);
-                    setFormType("add");
+                    setOpenModal("add");
                   }}
                 >
                   Cadastrar novo endereço
@@ -159,6 +180,17 @@ const CartAddresses = ({ handleNext }: { handleNext: () => void }) => {
                 </Button>
               </Box>
             </>
+          )}
+          {openModal === "remove" && addressSelected && (
+            <ModalRemove
+              title="Remover"
+              message="Deseja remover este telefone?"
+              onRemove={() => removeAddress(addressSelected.id)}
+              onClose={() => {
+                setOpenModal("");
+                getAddress();
+              }}
+            />
           )}
         </>
       )}
