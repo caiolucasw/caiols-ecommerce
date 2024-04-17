@@ -140,7 +140,6 @@ const CartPage = () => {
     itemId: string,
     quantity: number
   ) => {
-    console.log(quantity);
     if (!cartItems) return;
 
     let cartItemsAux = [...cartItems];
@@ -165,6 +164,7 @@ const CartPage = () => {
     quantity: number,
     cartItemId: number
   ) => {
+    console.log(quantity);
     try {
       const response = await axiosApp.post("/cart/products", {
         product: productId,

@@ -92,8 +92,8 @@ const ProductDetails = () => {
 
   return (
     <Box width="100%">
-      <Box mb={3}>
-        <Typography color="text." variant="h5" fontWeight={700}>
+      <Box>
+        <Typography variant="h6" fontWeight={700}>
           {product?.name || ""}
         </Typography>
       </Box>
@@ -101,6 +101,7 @@ const ProductDetails = () => {
         display="flex"
         gap={{ xs: 4, md: 2 }}
         flexDirection={{ xs: "column", md: "row" }}
+        mt={{ xs: 4, xl: 6 }}
       >
         <Box flex={1} display="flex">
           {product?.product_images && (

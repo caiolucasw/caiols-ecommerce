@@ -4,7 +4,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import AccountInfo from "../AccountInfo";
 import MyOrders from "../order/MyOrders";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { logout } from "../../app/userSlice";
 import MyAccount from "../MyAccount";
@@ -36,6 +36,7 @@ const MyAccountPage = () => {
   const { search } = useLocation();
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(search);
@@ -52,9 +53,10 @@ const MyAccountPage = () => {
             {tabs.map((tab) => (
               <Box
                 key={tab.id}
-                onClick={() => {
+                onClick={async () => {
                   if (tab.value === "logout") {
-                    logout();
+                    await dispatch(logout(user));
+                    navigate("/login");
                     return;
                   }
 
@@ -99,7 +101,10 @@ const MyAccountPage = () => {
                   borderRadius: 999,
                   fontWeight: 700,
                 }}
-                onClick={() => dispatch(logout(user))}
+                onClick={async () => {
+                  await dispatch(logout(user));
+                  navigate("/login");
+                }}
               >
                 Sair
               </Button>

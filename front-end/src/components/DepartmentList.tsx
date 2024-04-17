@@ -22,12 +22,6 @@ const listItems = [
     path: "/notebooks",
   },
   {
-    id: 3,
-    label: "Tablets",
-    icon: <TabletIcon />,
-    path: "/tablets",
-  },
-  {
     id: 4,
     label: "Celulares",
     icon: <SmartphoneIcon />,

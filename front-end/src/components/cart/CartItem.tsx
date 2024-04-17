@@ -49,19 +49,18 @@ const CartItem = ({
         py: 2,
       }}
     >
-      <Box display="flex" gap={2} flexDirection={{ xs: "column", md: "row" }}>
+      <Box display="flex" gap={2} flexDirection={{ xs: "column", lg: "row" }}>
         <Box
           display="flex"
           gap={{ xs: 1, sm: 3 }}
           flex={1}
-          flexDirection={{ xs: "column", sm: "row" }}
-          alignItems={{ xs: "center", sm: "start" }}
+          flexDirection={{ xs: "column", md: "row" }}
+          alignItems={{ xs: "center", md: "start" }}
         >
           <Box
             sx={{
               width: 180,
               height: 180,
-              backgroundColor: "red",
             }}
           >
             <img

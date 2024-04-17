@@ -246,7 +246,12 @@ const MainNav = () => {
                       Admin
                     </MenuItem>
                   )}
-                  <MenuItem onClick={() => dispatch(logout(user))}>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("login");
+                      dispatch(logout(user));
+                    }}
+                  >
                     Sair
                   </MenuItem>
                 </MenuList>

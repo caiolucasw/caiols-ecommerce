@@ -57,7 +57,7 @@ const ImageList = ({ productImages }: { productImages: ProductImage[] }) => {
             justifyContent="center"
             sx={{
               order: { xs: 1, sm: 2 },
-              maxHeight: 500,
+              maxHeight: 400,
             }}
           >
             <img

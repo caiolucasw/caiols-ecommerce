@@ -9,32 +9,43 @@ import {
   FormControl,
   Button,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axiosApp from "../../customAxios";
 import { BrandInterface, CategoryInterface } from "../../utils/types";
 import { toast } from "react-toastify";
+import ImageNew from "../ImageNew";
+import axios from "axios";
 
 interface ProductInfo {
   categories: CategoryInterface[];
   brands: BrandInterface[];
 }
 
+interface ProductNew {
+  name: string;
+  description: string;
+  price: string;
+  category: string;
+  brand: string;
+  images: File[];
+}
 const productDefault = {
   name: "",
   description: "",
   price: "",
   category: "",
   brand: "",
-  images_url: ["", "", "", "", ""],
+  images: [],
 };
 
 const ProductsAdd = () => {
   const [loading, setLoading] = useState(false);
+  const inputImage = useRef<HTMLInputElement | null>(null);
   const [productInfo, setProductInfo] = useState<ProductInfo>({
     categories: [],
     brands: [],
   });
-  const [product, setProduct] = useState(productDefault);
+  const [product, setProduct] = useState<ProductNew>(productDefault);
 
   const handleChange = (fieldName: string, fieldValue: string) => {
     setProduct((curr) => ({
@@ -43,15 +54,33 @@ const ProductsAdd = () => {
     }));
   };
 
-  const handleChangeImageUrl = (index: number, value: string) => {
-    const imagesUrlAux = [...product.images_url];
-    if (index < 0 || index >= imagesUrlAux.length) return;
+  // const handleChangeImageUrl = (index: number, value: string) => {
+  //   const imagesUrlAux = [...product.images_url];
+  //   if (index < 0 || index >= imagesUrlAux.length) return;
 
-    imagesUrlAux[index] = value;
+  //   imagesUrlAux[index] = value;
+
+  //   setProduct((curr) => ({
+  //     ...curr,
+  //     images: imagesUrlAux,
+  //   }));
+  // };
+
+  const handleImages = (e: any) => {
+    const files = e?.target.files;
+    if (!files || files.length === 0) return;
+    if (files?.length > 4) {
+      toast.error("Máximo de 4 imagens permitidas");
+      return;
+    }
+    const orderKeys = Object.keys(files)
+      .map((key) => Number(key))
+      .toSorted((a, b) => a - b);
+    const images = orderKeys.map((key) => files[key]);
 
     setProduct((curr) => ({
       ...curr,
-      images_url: imagesUrlAux,
+      images,
     }));
   };
 
@@ -68,8 +97,30 @@ const ProductsAdd = () => {
 
   const addProduct = async () => {
     setLoading(true);
+    const form = new FormData();
+    const { name, description, price, category, brand, images } = product;
+    form.append("name", name);
+    form.append("description", description), form.append("price", price);
+    form.append("category", category);
+    form.append("brand", brand);
+
+    if (images) {
+      for (const file of images) {
+        form.append("images[]", file);
+      }
+    }
+
     try {
-      const res = await axiosApp.post("/products", JSON.stringify(product));
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_API_URL}/products`,
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       if (res.status === 201) {
         toast.success("Produto adicionado com sucesso!");
         setProduct(productDefault);
@@ -165,22 +216,40 @@ const ProductsAdd = () => {
 
           <Grid item xs={12}>
             <Box my={2}>
-              <Typography variant="h6">Imagens</Typography>
+              <Typography variant="h6" fontWeight={700} display="inline-block">
+                Imagens
+              </Typography>
+              <Typography variant="subtitle2" display="inline-block">
+                &nbsp; (Obs: Mínimo 2 imagens e no máximo 4 imagens)
+              </Typography>
             </Box>
             <Grid container spacing={3}>
-              {[1, 2, 3, 4].map((value) => (
-                <Grid item xs={12} key={value}>
-                  <TextField
-                    name={`image_url${value}`}
-                    label={`Imagem Url ${value}`}
-                    fullWidth
-                    value={product.images_url[value - 1]}
-                    onChange={(e) =>
-                      handleChangeImageUrl(value - 1, e.target.value)
-                    }
-                  />
-                </Grid>
-              ))}
+              <Grid item xs={12}>
+                <input
+                  ref={inputImage}
+                  name="image_url"
+                  multiple
+                  type="file"
+                  style={{ display: "none" }}
+                  onChange={(e) => handleImages(e)}
+                />
+                <Button
+                  variant="outlined"
+                  onClick={() => inputImage?.current?.click()}
+                >
+                  Adicionar Imagens
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Box>
+                  <Box display="flex" gap={1} mb={1}>
+                    {product &&
+                      product.images.map((image) => {
+                        return <ImageNew key={image.name} image={image} />;
+                      })}
+                  </Box>
+                </Box>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} display="flex" justifyContent="end" mt={2}>

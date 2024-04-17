@@ -45,6 +45,7 @@ const Brands = () => {
       if (res.status === 201 && res.data) {
         toast.success("Marca adicionada");
         setBrands((curr) => [...curr, res.data]);
+        setNewBrand(newBrandDefault);
       }
     } catch (err) {
       toast.error("Erro ao adicionar marca");

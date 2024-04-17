@@ -1,13 +1,5 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import BrandItem from "./BrandItem";
-import axiosApp from "../../customAxios";
 import { BrandInterface } from "../../utils/types";
 
 interface BrandListProps {
@@ -23,7 +15,7 @@ const BrandList = ({ brands, loading }: BrandListProps) => {
           <CircularProgress size={50} />
         </Box>
       ) : (
-        <Box display="flex" gap={2.5}>
+        <Box display="flex" gap={2.5} flexWrap="wrap">
           {brands && brands.length > 0 ? (
             brands.map((brand) => <BrandItem brand={brand} />)
           ) : (
