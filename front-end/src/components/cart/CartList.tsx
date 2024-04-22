@@ -1,5 +1,5 @@
 import CartItem from "../cart/CartItem";
-import { Cart, CartItem as CartItemInterface } from "../../utils/types";
+import { CartItem as CartItemInterface } from "../../utils/types";
 import { Box, Typography } from "@mui/material";
 
 interface CartCheckoutProps {

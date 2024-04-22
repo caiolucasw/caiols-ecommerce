@@ -43,10 +43,10 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const activeValue = steps[steps.findIndex((step) => step.id === activeStep)];
-  const [completed, setCompleted] = useState<{
+  const [completed, _setCompleted] = useState<{
     [k: number]: boolean;
   }>({});
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
 
   const [cart, setCart] = useState<Cart | null>(null);
   const [total, setTotal] = useState(0);
@@ -77,7 +77,7 @@ const CheckoutPage = () => {
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
           // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
+          steps.findIndex((_step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };

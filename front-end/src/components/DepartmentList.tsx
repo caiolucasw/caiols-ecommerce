@@ -4,8 +4,7 @@ import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import TvIcon from "@mui/icons-material/Tv";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import HomeIcon from "@mui/icons-material/Home";
-import TabletIcon from "@mui/icons-material/Tablet";
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const listItems = [

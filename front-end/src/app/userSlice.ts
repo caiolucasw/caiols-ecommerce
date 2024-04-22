@@ -91,7 +91,7 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getUser.pending, (state, action) => {
+    builder.addCase(getUser.pending, (state) => {
       if (state) {
         state = { ...state, loading: true };
       }
@@ -114,7 +114,7 @@ export const userSlice = createSlice({
 
       return state;
     });
-    builder.addCase(getUser.rejected, (state, action) => {
+    builder.addCase(getUser.rejected, (state) => {
       if (state) {
         state = { ...state, loading: true };
       }

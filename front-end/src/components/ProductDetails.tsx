@@ -190,7 +190,7 @@ const ProductDetails = () => {
           <Tabs
             indicatorColor="primary"
             value={currentTab}
-            onChange={(e, value) => setCurrentTab(value)}
+            onChange={(_e, value) => setCurrentTab(value)}
           >
             <Tab value="description" label="Descrição" />
             {/* <Tab value="details" label="Detalhes do Produto" /> */}

@@ -1,10 +1,4 @@
-import {
-  Box,
-  CircularProgress,
-  Divider,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import axiosApp from "../../customAxios";
 import { ProductInterface } from "../../utils/types";

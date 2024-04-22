@@ -58,7 +58,7 @@ const AdminPage = () => {
             <Tabs
               indicatorColor="primary"
               value={currentTab}
-              onChange={(e, value) => setCurrentTab(value)}
+              onChange={(_e, value) => setCurrentTab(value)}
             >
               <Tab value="products" label="Produtos" />
               <Tab value="brands" label="Marcas" />

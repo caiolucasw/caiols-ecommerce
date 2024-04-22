@@ -7,6 +7,8 @@ import ModalAddress from "./ModalAddress";
 import ModalRemove from "./utils/ModalRemove";
 import { toast } from "react-toastify";
 
+type modalType = "add" | "update" | "remove" | "";
+
 const customAddress = {
   id: -1,
   person_name: "",
@@ -22,7 +24,7 @@ const customAddress = {
 
 const Addresses = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [openModal, setOpenModal] = useState<string>("");
+  const [openModal, setOpenModal] = useState<modalType>("");
   const [addressSelected, setAddressSelected] = useState<Address | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
 

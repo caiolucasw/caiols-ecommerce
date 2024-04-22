@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import axiosApp from "../../customAxios";
 import { CategoryInterface } from "../../utils/types";
 import { Box, Chip, CircularProgress, Typography } from "@mui/material";
 

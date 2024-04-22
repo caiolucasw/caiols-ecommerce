@@ -160,7 +160,7 @@ const FormAddressCheckout = ({
                         mask="99999-999"
                         name="zip_code"
                         value={values.zip_code}
-                        onChange={async (e) => {
+                        onChange={async (e: any) => {
                           handleChange(e);
                           const cep = e.target.value
                             .trim()

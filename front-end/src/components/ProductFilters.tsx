@@ -40,7 +40,6 @@ const ProductFilters = ({ category }: { category?: string }) => {
   const [minMaxSlider, setMinMaxSlider] = useState<number[]>([0, 0]);
   const [sliderValue, setSliderValue] = useState<number[]>([0, 0]);
 
-  const price = useAppSelector((state) => state.searchProducts.filters.price);
   const [categories, setCategories] = useState<
     CategoryProductsCountInterface[]
   >([]);
@@ -50,14 +49,14 @@ const ProductFilters = ({ category }: { category?: string }) => {
 
   const location = useLocation();
 
-  const handleChangeCommited = (e: any, value: number | number[]) => {
+  const handleChangeCommited = (_e: any, value: number | number[]) => {
     if (Array.isArray(value)) {
       dispatch(setPriceRange(value));
     }
   };
 
   const handleChangeSlider = (
-    event: Event,
+    _event: Event,
     newValue: number | number[],
     activeThumb: number
   ) => {

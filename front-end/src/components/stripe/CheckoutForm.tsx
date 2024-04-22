@@ -8,7 +8,7 @@ import { StripePaymentElementOptions } from "@stripe/stripe-js";
 import { Button, Typography, Box } from "@mui/material";
 import { transformNumberToCurrency } from "../../utils/usefulMethods";
 import axiosApp from "../../customAxios";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../../app/store";
 import { updateCartCount } from "../../app/userSlice";
