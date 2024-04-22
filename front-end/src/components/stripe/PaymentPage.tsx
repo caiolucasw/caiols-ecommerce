@@ -1,13 +1,11 @@
-import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import axiosApp from "../../customAxios";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 
-const stripePromise = loadStripe(
-  "pk_test_51IXRdQECw79QhUt21oqnl2beME6z0mqOozFdRwv5GAx91HnkzYenH4z0bViBjivj6PvLJEllWcuqoRCYXdqMIHVO00Gk0UzPUs"
-);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_API_TEST);
 
 const PaymentPage = ({ cartId, total }: { cartId: number; total: number }) => {
   const [clientSecret, setClientSecret] = useState("");
