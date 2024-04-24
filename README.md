@@ -1,4 +1,5 @@
-## ﻿Caio.ls Ecommerce ([caiols-ecommerce](https://github.com/caiolucasw/caiols-ecommerce/edit/main/README.md))
+## ﻿Caio.ls Ecommerce
+### Link:  [caiols-ecommerce](https://github.com/caiolucasw/caiols-ecommerce/edit/main/README.md)
 
 ## Descrição:
 **Caio.ls Ecommerce** é um projeto pessoal para simular um simples e-commerce que vende produtos de tecnologia. Esse projeto foi desenvolvido como parte de um esforço pessoal para expandir e reforçar conhecimentos em tecnologias de backend e frontend, esse projeto oferece uma oportunidade de experimentar e explorar diferentes aspectos do desenvolvimento de software. Cada linha de código, cada recurso implementado e cada desafio superado contribuem para o crescimento e desenvolvimento profissional.
@@ -12,6 +13,28 @@ Enquanto isso, no frontend, o foco está na criação de uma interface de usuár
 
 ![Modelo de Domínio](ecommerce-diagram-model.png)
 
+
+## Site
+
+#### • Home
+
+<div>
+  <img src="./front-end/images-site/home.png" alt="drawing" style="width:1000px; display: block;"/>
+</div>
+
+#### • Checkout
+
+<div>
+  <img src="./front-end/images-site/checkout.png" alt="drawing" style="width:1000px; display: block;"/>
+</div>
+
+#### • Minha Conta
+
+<div>
+  <img src="./front-end/images-site/my-account.png" alt="drawing" style="width:1000px; display: block;"/>
+</div>
+
+
 ## Tecnologias
   - Front-end:
     - React
@@ -24,12 +47,6 @@ Enquanto isso, no frontend, o foco está na criação de uma interface de usuár
     - MySQL
     - Stripe
     - Amazon S3
-
-## Site
-
-![Home](./front-end/images-site/home.png)
-![Checkout](./front-end/images-site/checkout.png)
-![Minha Conta](./front-end/images-site/my-account.png)
 
 ## Deploy
 - O deploy da aplicação foi feito com o uso de duas instâncias da Amazon EC2 com o Ubuntu e Apache
