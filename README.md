@@ -17,7 +17,18 @@ Enquanto isso, no frontend, o foco está na criação de uma interface de usuár
     - React
     - MUI
     - Redux
+    - Stripe
 
   - Back-end:
     - Laravel
     - MySQL
+    - Stripe
+    - Amazon S3
+
+## Deploy
+- O deploy da aplicação foi feito o uso de duas instâncias da Amazon EC2 com o Ubuntu e Apache
+
+
+## Autor
+
+#### Caio Lucas Silveira de Sousa <br><br> [![image](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/caiolsds)
