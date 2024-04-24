@@ -26,7 +26,7 @@ Enquanto isso, no frontend, o foco está na criação de uma interface de usuár
     - Amazon S3
 
 ## Deploy
-- O deploy da aplicação foi feito o uso de duas instâncias da Amazon EC2 com o Ubuntu e Apache
+- O deploy da aplicação foi feito com o uso de duas instâncias da Amazon EC2 com o Ubuntu e Apache
 
 
 ## Autor
