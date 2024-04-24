@@ -25,6 +25,12 @@ Enquanto isso, no frontend, o foco está na criação de uma interface de usuár
     - Stripe
     - Amazon S3
 
+## Site
+
+![Home](./front-end/images-site/home.png)
+![Checkout](./front-end/images-site/checkout.png)
+![Minha Conta](./front-end/images-site/my-account.png)
+
 ## Deploy
 - O deploy da aplicação foi feito com o uso de duas instâncias da Amazon EC2 com o Ubuntu e Apache
 
