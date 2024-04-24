@@ -14,7 +14,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { useEffect, useState } from "react";
 import {
   setBrand,
-  setCategory,
+  // setCategory,
   setPriceRange,
 } from "../app/searchProductsSlice";
 import { useAppDispatch, useAppSelector } from "../app/store";
@@ -24,7 +24,6 @@ import {
   BrandProductsCountInterface,
   CategoryProductsCountInterface,
 } from "../utils/types";
-import { useLocation } from "react-router-dom";
 
 const minDistance = 0;
 
@@ -34,20 +33,16 @@ const ProductFilters = ({ category }: { category?: string }) => {
   const selectedBrands = useAppSelector(
     (state) => state.searchProducts.filters.brands
   );
-  const selectedCategories = useAppSelector(
-    (state) => state.searchProducts.filters.categories
-  );
+
   const [minMaxSlider, setMinMaxSlider] = useState<number[]>([0, 0]);
   const [sliderValue, setSliderValue] = useState<number[]>([0, 0]);
 
-  const [categories, setCategories] = useState<
+  const [_categories, setCategories] = useState<
     CategoryProductsCountInterface[]
   >([]);
 
   const [brands, setBrands] = useState<BrandProductsCountInterface[]>([]);
   const lgScreen = useMediaQuery(theme.breakpoints.up("md"));
-
-  const location = useLocation();
 
   const handleChangeCommited = (_e: any, value: number | number[]) => {
     if (Array.isArray(value)) {
@@ -77,24 +72,24 @@ const ProductFilters = ({ category }: { category?: string }) => {
     }
   };
 
-  const addCategory = (category: CategoryProductsCountInterface) => {
-    dispatch(
-      setCategory({
-        category: category,
-        type: "ADD",
-      })
-    );
-  };
+  // const _addCategory = (category: CategoryProductsCountInterface) => {
+  //   dispatch(
+  //     setCategory({
+  //       category: category,
+  //       type: "ADD",
+  //     })
+  //   );
+  // };
 
-  const removeCategory = (category: CategoryProductsCountInterface) => {
-    dispatch(
-      // @ts-ignore
-      setCategory({
-        category: category,
-        type: "REMOVE",
-      })
-    );
-  };
+  // const _removeCategory = (category: CategoryProductsCountInterface) => {
+  //   dispatch(
+  //     // @ts-ignore
+  //     setCategory({
+  //       category: category,
+  //       type: "REMOVE",
+  //     })
+  //   );
+  // };
 
   const addBrand = (brand: BrandProductsCountInterface) => {
     dispatch(
@@ -201,8 +196,8 @@ const ProductFilters = ({ category }: { category?: string }) => {
                 </Box>
               </Box>
             </Box>
-            <Divider sx={{ marginTop: 1, marginBottom: 2 }} />
-            {location && location.pathname === "/" && (
+            {/* <Divider sx={{ marginTop: 1, marginBottom: 2 }} /> */}
+            {/* {location && location.pathname === "/" && (
               <>
                 <Typography variant="subtitle1" fontWeight={700} mb={2}>
                   Categorias
@@ -243,7 +238,7 @@ const ProductFilters = ({ category }: { category?: string }) => {
                   </Box>
                 </PerfectScrollbar>
               </>
-            )}
+            )} */}
 
             <Divider sx={{ marginBottom: 2 }} />
             <Typography variant="subtitle1" fontWeight={700} mb={2}>
