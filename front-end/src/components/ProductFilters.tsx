@@ -12,11 +12,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { useEffect, useState } from "react";
-import {
-  setBrand,
-  // setCategory,
-  setPriceRange,
-} from "../app/searchProductsSlice";
+import { setBrand, setPriceRange } from "../app/searchProductsSlice";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import axiosApp from "../customAxios";
 import FilterListIcon from "@mui/icons-material/FilterListOutlined";
@@ -71,25 +67,6 @@ const ProductFilters = ({ category }: { category?: string }) => {
       ]);
     }
   };
-
-  // const _addCategory = (category: CategoryProductsCountInterface) => {
-  //   dispatch(
-  //     setCategory({
-  //       category: category,
-  //       type: "ADD",
-  //     })
-  //   );
-  // };
-
-  // const _removeCategory = (category: CategoryProductsCountInterface) => {
-  //   dispatch(
-  //     // @ts-ignore
-  //     setCategory({
-  //       category: category,
-  //       type: "REMOVE",
-  //     })
-  //   );
-  // };
 
   const addBrand = (brand: BrandProductsCountInterface) => {
     dispatch(
@@ -196,50 +173,6 @@ const ProductFilters = ({ category }: { category?: string }) => {
                 </Box>
               </Box>
             </Box>
-            {/* <Divider sx={{ marginTop: 1, marginBottom: 2 }} /> */}
-            {/* {location && location.pathname === "/" && (
-              <>
-                <Typography variant="subtitle1" fontWeight={700} mb={2}>
-                  Categorias
-                </Typography>
-                <PerfectScrollbar>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    p={2}
-                    pt={1}
-                    maxHeight={200}
-                  >
-                    {categories.map((category) => (
-                      <FormControlLabel
-                        key={category.id}
-                        control={
-                          <Checkbox
-                            checked={
-                              !!selectedCategories[category.id] &&
-                              category.id === selectedCategories[category.id].id
-                            }
-                            sx={{
-                              "&.Mui-checked": {
-                                color: "#70e000",
-                              },
-                            }}
-                            onChange={(event) => {
-                              if (event.target.checked) addCategory(category);
-                              else removeCategory(category);
-                            }}
-                          />
-                        }
-                        label={`${category.label} (${category.products_count})`}
-                        sx={{ whiteSpace: "nowrap" }}
-                      />
-                    ))}
-                  </Box>
-                </PerfectScrollbar>
-              </>
-            )} */}
-
             <Divider sx={{ marginBottom: 2 }} />
             <Typography variant="subtitle1" fontWeight={700} mb={2}>
               Marcas
