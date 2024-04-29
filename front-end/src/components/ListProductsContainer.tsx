@@ -53,7 +53,7 @@ const ListProductsContainer = ({ category }: { category?: string }) => {
         }}
       >
         <Grid container spacing={2}>
-          {isLoading ? (
+          {isLoading || !products ? (
             <Grid item xs={12}>
               <LinearProgress />
             </Grid>

@@ -23,14 +23,14 @@ export interface Filters {
 }
 export interface SearchProductsState {
   name: string;
-  products: ProductInterface[];
+  products: ProductInterface[] | null;
   loading: boolean;
   filters: Filters;
 }
 
 const initialState: SearchProductsState = {
   name: "",
-  products: [],
+  products: null,
   loading: false,
   filters: {
     categories: {},
